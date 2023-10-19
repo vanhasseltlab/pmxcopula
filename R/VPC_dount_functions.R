@@ -233,102 +233,6 @@ create_geom_donutVPC <- function(sim_contours, conf_band = 95, colors_bands = c(
 }
 
 
-
-create_geom_donutVPC_dat <- function(sim_data,
-                                     percentiles, B, pairs_matrix = NULL, nobs = NULL,
-                                     conf_band = 95, colors_bands = c("#99E0DC", "#E498B4"), return_polygons = FALSE) {
-
-  sim_contours_list <- list()
-
-  # if (is.null(vine$names)) {
-  #   vine$names <- paste0("V", 1:vine$copula$structure$d) #  rename covariate names into e.g. "V1", "V2" and "V3"
-  # }
-
-  # if (!"simulation_nr") {
-  #   vine$nobs <- nobs
-  # } else if (is.null(vine$nobs)) {
-  #   stop("nobs should be specified if the vine is not estimated from data",
-  #        " and does not contain nobs in the vine object (vine$nobs)")
-  # }
-  var <- setdiff(colnames(sim_data), "simulation_nr")
-
-  if (!"simulation_nr" %in% colnames(sim_data)) {
-    #check for simulation_nr not in sim_data
-    stop("Column 'simulation_nr' is missing in sim_data")
-  }
-
-  if (is.null(pairs_matrix)) {
-    pairs_matrix <- t(combn(var, 2))
-  } else if (!all(c(pairs_matrix) %in% var)) {
-    #check for names not matching between vine and pairs_matrix
-    stop("Covariate names in pairs_matrix differ from names in vine")
-  }
-
-  #simulate from vine
-  # full_sim_data <- as.data.frame(rvine(vine$nobs*B, vine))
-  # full_sim_data$b <- rep(1:B, each = vine$nobs) # add label for each run of simulation
-
-  #calculate contours for every percentile and every covariate combination
-  i <- 1
-  for (b in 1:B) {
-    cat("\r", "Calculate contours of simulation:", b, "/", B)
-    sim_data_b <- sim_data[sim_data$b == b, ]
-    for (p in 1:nrow(pairs_matrix)) {
-      #use ks for density computation
-      kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]], compute.cont = TRUE, approx.cont = FALSE)
-      contour_sim <- with(kd_sim, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
-                                                          z = estimate, levels = cont[paste0(percentiles, "%")]))
-      #extract information
-      sim_contours_list[[i]] <- extract_contour_df(contour_sim, kd_sim$cont, b, pairs_matrix[p, ])
-      i <- i + 1
-
-    }
-
-  }
-  cat("\n")
-  sim_contours <- dplyr::bind_rows(sim_contours_list)
-
-
-  # percentiles <- as.numeric(gsub("%", "", unique(sim_contours$percentile), fixed = T))
-  # percentiles <- as.numeric(gsub("%", "", sort(unique(sim_contours$percentile)), fixed = T))
-  # pairs_matrix <- unique(sim_contours[, c("var1", "var2")])
-
-  colors_bands <- colors_bands[((1:length(percentiles))/2 == round((1:length(percentiles))/2)) + 1] # colors were assigned to the bands depending on the odd or even order of percentiles
-  names(colors_bands) <- percentiles
-
-  contour_geoms <- list()
-  conf_geom_data <- list()
-  for (p in 1:nrow(pairs_matrix)) {
-    var_pair <- paste0(pairs_matrix[p, 1], "-", pairs_matrix[p, 2])
-
-    contour_geoms[[var_pair]] <- list()
-    for (pr in percentiles) {
-      sim_full_df <- sim_contours %>%
-        dplyr::filter(var1 == pairs_matrix[p, 1], var2 == pairs_matrix[p, 2]) %>%
-        dplyr::filter(percentile == paste0(pr, "%"))
-      kd_sim_full <- ks::kde(sim_full_df[, c("x", "y")], compute.cont = TRUE, approx.cont = FALSE)
-      # new contour was calculated based the coordinates of the previously calculated contours
-      # different countours at the same density level will be merged
-      contour_sim_full <- with(kd_sim_full, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
-                                                                    z = estimate, levels = cont[paste0(100-conf_band, "%")]))
-      contour_data <- extract_contour_df(contour_sim_full, kd_sim_full$cont, pr, pairs_matrix[p, ])
-
-      conf_geom_data[[paste0(var_pair, ": ", pr, "%")]] <- contour_data %>%
-        create_polygon()
-
-      contour_geoms[[var_pair]][[paste0(pr, "%")]] <- ggplot2::geom_sf(data = conf_geom_data[[paste0(var_pair, ": ", pr, "%")]],
-                                                                       color = colors_bands[as.character(pr)], fill = colors_bands[as.character(pr)])
-    }
-
-  }
-
-  if (return_polygons) {
-    return(conf_geom_data)
-  } else {
-    return(contour_geoms)
-  }
-}
-
 #' Create ggplot(s) with geom_vpc.
 #'
 #' @param geom_vpc Output list from the simulate_contours function, containing
@@ -396,3 +300,117 @@ ggVPC_donut <- function(geom_vpc, obs_data, pairs_data = NULL, save_path = NULL)
 
 # - add possibility of combining plots (in matrix?)
 # - add possibility to plot without observed data
+
+
+#' Create ggplot layers for simulation data.
+#'
+#' @param sim_data A data.frame containing simulation dataset. A column called "simulation_nr" is reuqired to
+#' indicate the number of simulations.
+#' @param percentiles (A vector of) Numeric value(s) representing the
+#' percentiles of the density distribution that appear in the VPC donut plot;
+#' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
+#' @param B An integer indicating the number of simulations.
+#' @param pairs_matrix Matrix with 2 column and each row containing a pair of
+#' covariate names from the copula. If set to NULL, every possible covariate
+#' pair is included.
+#' @param conf_band A numeric value indicating the empirical confidence level for the width of the bands; e.g., 95 indicates 95\% confidence interval.
+#' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
+#' @param return_polygons A logical value to indicate whether return to a (list of) sf polygon object or a list containing the ggplot layers for a donut VPC.
+#'
+#' @return
+#' @export
+
+extract_geom_donutVPC <- function(sim_data,
+                                  percentiles, B, pairs_matrix = NULL,
+                                  conf_band = 95, colors_bands = c("#99E0DC", "#E498B4"), return_polygons = FALSE) {
+
+  sim_contours_list <- list()
+
+  # if (is.null(vine$names)) {
+  #   vine$names <- paste0("V", 1:vine$copula$structure$d) #  rename covariate names into e.g. "V1", "V2" and "V3"
+  # }
+
+  # if (!"simulation_nr") {
+  #   vine$nobs <- nobs
+  # } else if (is.null(vine$nobs)) {
+  #   stop("nobs should be specified if the vine is not estimated from data",
+  #        " and does not contain nobs in the vine object (vine$nobs)")
+  # }
+  var <- setdiff(colnames(sim_data), "simulation_nr")
+
+  if (!"simulation_nr" %in% colnames(sim_data)) {
+    #check for simulation_nr not in sim_data
+    stop("Column 'simulation_nr' is missing in sim_data")
+  }
+
+  if (is.null(pairs_matrix)) {
+    pairs_matrix <- t(combn(var, 2))
+  } else if (!all(c(pairs_matrix) %in% var)) {
+    #check for names not matching between vine and pairs_matrix
+    stop("Covariate names in pairs_matrix differ from names in vine")
+  }
+
+  #simulate from vine
+  # full_sim_data <- as.data.frame(rvine(vine$nobs*B, vine))
+  # full_sim_data$b <- rep(1:B, each = vine$nobs) # add label for each run of simulation
+
+  #calculate contours for every percentile and every covariate combination
+  i <- 1
+  for (b in 1:B) {
+    cat("\r", "Calculate contours of simulation:", b, "/", B)
+    sim_data_b <- sim_data[sim_data$simulation_nr == b,]
+    for (p in 1:nrow(pairs_matrix)) {
+      #use ks for density computation
+      kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]], compute.cont = TRUE, approx.cont = FALSE)
+      contour_sim <- with(kd_sim, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
+                                                          z = estimate, levels = cont[paste0(percentiles, "%")]))
+      #extract information
+      sim_contours_list[[i]] <- extract_contour_df(contour_sim, kd_sim$cont, b, pairs_matrix[p, ])
+      i <- i + 1
+
+    }
+
+  }
+  cat("\n")
+  sim_contours <- dplyr::bind_rows(sim_contours_list)
+
+
+  # percentiles <- as.numeric(gsub("%", "", unique(sim_contours$percentile), fixed = T))
+  # percentiles <- as.numeric(gsub("%", "", sort(unique(sim_contours$percentile)), fixed = T))
+  # pairs_matrix <- unique(sim_contours[, c("var1", "var2")])
+
+  colors_bands <- colors_bands[((1:length(percentiles))/2 == round((1:length(percentiles))/2)) + 1] # colors were assigned to the bands depending on the odd or even order of percentiles
+  names(colors_bands) <- percentiles
+
+  contour_geoms <- list()
+  conf_geom_data <- list()
+  for (p in 1:nrow(pairs_matrix)) {
+    var_pair <- paste0(pairs_matrix[p, 1], "-", pairs_matrix[p, 2])
+
+    contour_geoms[[var_pair]] <- list()
+    for (pr in percentiles) {
+      sim_full_df <- sim_contours %>%
+        dplyr::filter(var1 == pairs_matrix[p, 1], var2 == pairs_matrix[p, 2]) %>%
+        dplyr::filter(percentile == paste0(pr, "%"))
+      kd_sim_full <- ks::kde(sim_full_df[, c("x", "y")], compute.cont = TRUE, approx.cont = FALSE)
+      # new contour was calculated based the coordinates of the previously calculated contours
+      # different countours at the same density level will be merged
+      contour_sim_full <- with(kd_sim_full, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
+                                                                    z = estimate, levels = cont[paste0(100-conf_band, "%")]))
+      contour_data <- extract_contour_df(contour_sim_full, kd_sim_full$cont, pr, pairs_matrix[p, ])
+
+      conf_geom_data[[paste0(var_pair, ": ", pr, "%")]] <- contour_data %>%
+        create_polygon()
+
+      contour_geoms[[var_pair]][[paste0(pr, "%")]] <- ggplot2::geom_sf(data = conf_geom_data[[paste0(var_pair, ": ", pr, "%")]],
+                                                                       color = colors_bands[as.character(pr)], fill = colors_bands[as.character(pr)])
+    }
+
+  }
+
+  if (return_polygons) {
+    return(conf_geom_data)
+  } else {
+    return(contour_geoms)
+  }
+}
