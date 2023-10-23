@@ -19,7 +19,6 @@
 #' @param full_plot A logical value to indicate whether to plot multiple figures
 #' on one page.
 #' @param caption A logical value to indicate define the size of caption.
-#' @param grob A logical value to indicate whether to decide the size of caption.
 #'
 #' @return A graphical object.
 #' @export
@@ -28,7 +27,7 @@
 plot_sim_obs_distribution <- function(sim_data, obs_data, variables = NULL,
                                       sim_nr = 1, title = NULL, plot_type = "points",
                                       pick_color = c("#3ABAC1","#969696"), full_plot = TRUE,
-                                      caption = NULL, grob = FALSE) {
+                                      caption = NULL) {
   #Combine truth and simulation results
   total_data <- obs_data %>% dplyr::mutate(type = "observed") %>%
     dplyr::bind_rows(sim_data %>% dplyr::mutate(type = "simulated"))
@@ -120,11 +119,6 @@ plot_sim_obs_distribution <- function(sim_data, obs_data, variables = NULL,
     t_layout_mat[lower.tri(t_layout_mat)] <- nr_cross_plots + length(variables) + (1:nr_cross_plots)
     layout_mat <- t(t_layout_mat)
     list_plots <- c(density_plots, univariate_plots, point_plots)
-  }
-
-  if (grob) {
-    return(gridExtra::arrangeGrob(grobs = list_plots, layout_matrix = layout_mat,
-                                  top = title, bottom = grid::textGrob(caption, gp = grid::gpar(fontsize = 70), x = 0, hjust = 0)))
   }
 
   gridExtra::grid.arrange(grobs = list_plots, layout_matrix = layout_mat, top = title, bottom = caption)
