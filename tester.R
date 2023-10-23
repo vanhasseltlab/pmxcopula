@@ -27,7 +27,7 @@ sim_contour_data <- simulate_contours(copula_example, percentiles = c(10, 50, 90
 geom_vpc <- create_geom_donutVPC(sim_contour_data, colors_bands = c("#99E0DC", "#E498B4", "black"))
 # return_polygons = FALSE
 geom_vpc <- create_geom_donutVPC(sim_contour_data, colors_bands = c("#99E0DC", "#E498B4", "black"), return_polygons = FALSE) # return to a list
-geom_vpc_t <- create_geom_donutVPC(sim_contour_data, colors_bands = c("#99E0DC", "#E498B4"), return_polygons = TRUE)
+geom_vpc <- create_geom_donutVPC(sim_contour_data, colors_bands = c("#99E0DC", "#E498B4"), return_polygons = FALSE)
 plots <- ggVPC_donut(geom_vpc, df_example)
 
 # check outcomes

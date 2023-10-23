@@ -160,7 +160,7 @@ simulate_contours <- function(vine, percentiles, B, pairs_matrix = NULL, nobs = 
       #use ks for density computation
       kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]], compute.cont = TRUE, approx.cont = FALSE)
       contour_sim <- with(kd_sim, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
-                                               z = estimate, levels = cont[paste0(percentiles, "%")]))
+                                               z = estimate, levels = cont[paste0(100-percentiles, "%")]))
       #extract information
       sim_contours_list[[i]] <- extract_contour_df(contour_sim, kd_sim$cont, b, pairs_matrix[p, ])
       i <- i + 1
@@ -245,7 +245,7 @@ create_geom_donutVPC <- function(sim_contours, conf_band = 95, colors_bands = c(
 #' @export
 #'
 #work in progress
-ggVPC_donut <- function(geom_vpc, obs_data, pairs_data = NULL, save_path = NULL) {
+ggVPC_donut <- function(geom_vpc, obs_data, pairs_data = NULL) {
 
   if (is.null(pairs_data)) {
     pairs_data <- matrix(c(gsub("-([A-Z,a-z])\\w+", "", names(geom_vpc)),
@@ -253,13 +253,14 @@ ggVPC_donut <- function(geom_vpc, obs_data, pairs_data = NULL, save_path = NULL)
   }
 
   percentiles <- names(geom_vpc[[1]])
+  percentiles_num <- as.numeric(sub("\\%.*", "", percentiles))
 
   if (all(pairs_data %in% colnames(obs_data))) {
     obs_contours <- NULL
     for (p in 1:nrow(pairs_data)) {
       kd_obs <- ks::kde(obs_data %>% select(pairs_data[p, ]), compute.cont = TRUE)
       contour_obs <- with(kd_obs, contourLines(x = eval.points[[1]], y = eval.points[[2]],
-                                               z = estimate, levels = cont[percentiles]))
+                                               z = estimate, levels = cont[paste0(100-percentiles_num,"%")]))
       obs_contours <- rbind.data.frame(obs_contours, extract_contour_df(contour_obs, kd_obs$cont, 0, pairs_data[p, ]))
     }
   } else if (all(colnames(obs_data) %in%
@@ -286,14 +287,6 @@ ggVPC_donut <- function(geom_vpc, obs_data, pairs_data = NULL, save_path = NULL)
   }
 
   attr(plot_list, "obs_contours") <- obs_contours
-  VPC_donut <- plot_list
-  if (is.null(save_path)) {
-    path <- paste0(getwd(),"/VPC_donut.Rdata")
-    save(VPC_donut , file = path)
-  } else {
-    path <- paste0(save_path,"/VPC_donut.Rdata")
-    save(VPC_donut , file = path)
-  }
 
   return(plot_list)
 }
@@ -363,7 +356,7 @@ extract_geom_donutVPC <- function(sim_data,
       #use ks for density computation
       kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]], compute.cont = TRUE, approx.cont = FALSE)
       contour_sim <- with(kd_sim, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
-                                                          z = estimate, levels = cont[paste0(percentiles, "%")]))
+                                                          z = estimate, levels = cont[paste0(100-percentiles, "%")]))
       #extract information
       sim_contours_list[[i]] <- extract_contour_df(contour_sim, kd_sim$cont, b, pairs_matrix[p, ])
       i <- i + 1
