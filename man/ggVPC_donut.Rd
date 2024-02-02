@@ -4,7 +4,7 @@
 \alias{ggVPC_donut}
 \title{Create ggplot(s) with geom_vpc.}
 \usage{
-ggVPC_donut(geom_vpc, obs_data, pairs_data = NULL, save_path = NULL)
+ggVPC_donut(geom_vpc, obs_data, pairs_data = NULL)
 }
 \arguments{
 \item{geom_vpc}{Output list from the simulate_contours function, containing

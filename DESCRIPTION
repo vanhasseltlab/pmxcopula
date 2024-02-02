@@ -7,7 +7,7 @@ Maintainer: Yuchen Guo <iguoyuchen@outlook.com>
 Description: Facilitate the evaluation of copula model for virtual population generation in pharmacometric analysis.
     Calculate the overlap metric based on the 2-dimensional densities of the observed and simulated populations.
     Conduct the donut VPC check of the copula model.
-License: GPL (>= 3)
+License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
 Depends: 

@@ -13,8 +13,7 @@ plot_sim_obs_distribution(
   plot_type = "points",
   pick_color = c("#3ABAC1", "#969696"),
   full_plot = TRUE,
-  caption = NULL,
-  grob = FALSE
+  caption = NULL
 )
 }
 \arguments{
@@ -42,8 +41,6 @@ simulaion and observation datasets.}
 on one page.}
 
 \item{caption}{A logical value to indicate define the size of caption.}
-
-\item{grob}{A logical value to indicate whether to decide the size of caption.}
 }
 \value{
 A graphical object.
