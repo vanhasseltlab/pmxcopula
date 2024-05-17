@@ -3,5 +3,5 @@
 #' A data.frame containing 3 covariates(age, body weight and serum creatine) of pediatric population.
 #'
 #' @format A numeric data.frame
-#' @source Virtual population generated from copula model \url{www.starwars.com}
+#' @source Virtual population generated from copula model \url{https://doi.org/10.1002/cpt.3099}
 "df_example"

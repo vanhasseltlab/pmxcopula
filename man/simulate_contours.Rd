@@ -2,47 +2,27 @@
 % Please edit documentation in R/VPC_dount_functions.R
 \name{simulate_contours}
 \alias{simulate_contours}
-\title{Get contours from simulated data.}
+\title{Calculate density contours from simulation data.}
 \usage{
-simulate_contours(vine, percentiles, B, pairs_matrix = NULL, nobs = NULL)
+simulate_contours(sim_data, percentiles, sim_nr, pairs_matrix = NULL)
 }
 \arguments{
-\item{vine}{An object of class "vine_dist" or "vine", from rvinecopulib
-package.}
+\item{sim_data}{A data.frame containing simulation datasets with a column named 'sim_nr' to indicate the times of simulation.}
 
 \item{percentiles}{(A vector of) Numeric value(s) representing the
 percentiles of the density distribution that appear in the VPC donut plot;
 e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.}
 
-\item{B}{An integer indicating the number of simulations.}
+\item{sim_nr}{An integer identifying the simulation for which contours are calculated.}
 
 \item{pairs_matrix}{Matrix with 2 column and each row containing a pair of
 covariate names from the copula. If set to NULL, every possible covariate
 pair is included.}
-
-\item{nobs}{Number of observations for each simulation, if set to NULL, the
-number of observations from the original data will be picked.}
 }
 \value{
 A data.frame containing contours over all percentiles from the
 different simulations .
 }
 \description{
-Simulate or add simulated values from multiple simulations to compute
-the contours for a donut VPC
-}
-\examples{
-# specify pair-copulas
-bicop <- bicop_dist("bb1", 90, c(3, 2))
-pcs <- list(
-  list(bicop, bicop), # pair-copulas in first tree
-  list(bicop) # pair-copulas in second tree
-)
-# specify R-vine matrix
-mat <- matrix(c(1, 2, 3, 1, 2, 0, 1, 0, 0), 3, 3)
-# set up vine copula model
-vc <- vine_dist(list(distr = "norm"), pcs, mat)
-
-sim_contour_data <- simulate_contours(vc, c(10, 50, 90), B = 10, nobs = 10)
-
+Compute the contours from simulation data
 }

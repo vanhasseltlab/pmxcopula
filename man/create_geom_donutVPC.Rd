@@ -8,13 +8,14 @@ create_geom_donutVPC(
   sim_contours,
   conf_band = 95,
   colors_bands = c("#99E0DC", "#E498B4"),
-  return_polygons = FALSE
+  return_polygons = FALSE,
+  show_median = FALSE
 )
 }
 \arguments{
 \item{sim_contours}{Output data.frame from the simulate_contours function.}
 
-\item{conf_band}{A numeric value indicating the empirical confidence level for the width of the bands; e.g., 95 indicates 95\% confidence interval.}
+\item{conf_band}{A numeric value indicating the empirical confidence level for the width of the bands; e.g., 95 indicates 95% confidence interval.}
 
 \item{colors_bands}{A vector with two strings specifying the colors of the confidence bands.}
 

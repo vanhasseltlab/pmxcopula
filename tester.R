@@ -8,6 +8,7 @@ library(sf)
 library(ks)
 library(tidyverse) #dplyr + ggplot
 library(ggplot2)
+library(pmxcopula)
 #make some data
 set.seed(123)
 df_example <- read.csv("data/pediatrics_example_data.csv", row.names = 1)
@@ -21,7 +22,6 @@ copula_example <- vine(df_example, copula_controls = list(family_set = "parametr
 set.seed(04285195)
 
 sim_contour_data <- simulate_contours(copula_example, percentiles = c(10, 50, 90), B = 10) #5 sec/sim!
-sim_contour_data <- simulate_contours(copula_example, percentiles = c(10, 90, 50), B = 10) #5 sec/sim!
 sim_contour_data <- simulate_contours(copula_example, percentiles = c(10, 50, 90), pairs_matrix = matrix(c("CREA",  "CREA", "age","age", "BW", "BW"), ncol = 2), B = 10) #5 sec/sim!
 
 geom_vpc <- create_geom_donutVPC(sim_contour_data, colors_bands = c("#99E0DC", "#E498B4", "black"))
@@ -71,18 +71,127 @@ ggplot() +
   geom_sf(data = poly_output_sim, color = "orange", fill = "orange",  alpha = 0.3) +
   theme_bw() + theme(aspect.ratio = 1)
 
-#' Create ggplot layer for contours
-#'
-#' Create the ggplot contour layers for a donut VPC
-#'
-#' @param sim_contours Output data.frame from the simulate_contours function.
-#' @param conf_band A numeric value indicating the empirical confidence level for the width of the bands; e.g., 95 indicates 95% confidence interval.
-#' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
-#' @param return_polygons A logical value to indicate whether return to a (list of) sf polygon object or a list containing the ggplot layers for a donut VPC.
-#'
-#' @return A list containing the ggplot layers for a donut VPC or a (list
-#' of) sf polygon object.
-#' @export
-#'
-#' @examples
-#'
+#########################
+##### function test #####
+#########################
+
+## test the get_donutVPC() function ---
+# test
+# t(combn(var, 2))
+# obs_data <- df_example
+donutVPC_test <- get_donutVPC(sim_data = sim_example,
+                              obs_data = df_example,
+                              percentiles = c(10, 50, 90),
+                              sim_nr = 100,
+                              pairs_matrix = NULL,
+                              conf_band = 95,
+                              colors_bands = c("#99E0DC", "#E498B4"))
+donutVPC_mvn <- get_donutVPC(sim_data = sim_mvn,
+                             obs_data = Liver_expression_ins_log,
+                             percentiles = c(10, 50, 90),
+                             sim_nr = 100,
+                             pairs_matrix = NULL,
+                             conf_band = 95,
+                             colors_bands = c("#99E0DC", "#E498B4")) # run on server
+
+donutVPC_transmvn <- get_donutVPC(sim_data = sim_mvn_un_cmp,
+                                  obs_data = Liver_expression_ins_log,
+                                  percentiles = c(10, 50, 90),
+                                  sim_nr = 100,
+                                  pairs_matrix = NULL,
+                                  conf_band = 95,
+                                  colors_bands = c("#99E0DC", "#E498B4"))
+
+donutVPC_transmvn <- get_donutVPC(sim_data = sim_copula_cmp,
+                                  obs_data = Liver_expression_ins_log,
+                                  percentiles = c(10, 50, 90),
+                                  sim_nr = 100,
+                                  pairs_matrix = NULL,
+                                  conf_band = 95,
+                                  colors_bands = c("#99E0DC", "#E498B4"))
+
+donutVPC_mvn_plot <- wrap_plots(donutVPC_mvn, nrow = 9)
+ggsave(donutVPC_mvn_plot, file = "tests/dunutVPC_MVN.tiff",width = 13, height = 13, units = "in", dpi = 300)
+
+donutVPC_transmvn_plot <- wrap_plots(donutVPC_transmvn, nrow = 9)
+ggsave(donutVPC_transmvn_plot, file = "tests/trans.tiff",width = 13, height = 13, units = "in", dpi = 300)
+
+
+donutVPC_cop_plot <- wrap_plots(donutVPC_transmvn, nrow = 9)
+ggsave(donutVPC_cop_plot, file = "tests/dunutVPC_cop.tiff",width = 13, height = 13, units = "in", dpi = 300)
+
+## test the simulate_contours() function ---
+sim_example_10 <- sim_example[sim_example$simulation_nr == c(1:10),]
+sim_contour_test <- simulate_contours(sim_data = sim_example_10,
+                                      percentiles = c(10, 50, 90),
+                                      sim_nr = 10,
+                                      pairs_matrix = NULL)
+
+## test mVPC function ----
+# test
+mVPC_test <- mVPC(sim_data = sim_example,
+                  obs_data = df_example,
+                  var = NULL,
+                  sim_nr = 100,
+                  title = NULL,
+                  colors_bands = c("#99E0DC", "#E498B4"),
+                  full_plot = TRUE,
+                  caption = NULL,
+                  percentiles = c(10, 50, 90),
+                  conf_band = 95)
+# grid.draw(mVPC)
+#
+ggsave("mVPC_test.pdf", mVPC_test, width = 6, height = 6)
+
+
+## test the box for the categorical variables ----
+library(tidyverse)
+possi <- paste(c(rep("m", 3), rep("f", 3)), rep(c("A", "B", "C"), 2), sep = "_")
+set.seed(123)
+test_data <- sample(possi, 500, prob = c(0.2, 0.3, 0.02, 0.35, 0.1, 0.03), replace = TRUE) %>%
+  str_split_fixed(pattern = "_", n=2) %>% as.data.frame()
+sim_data <- sample(possi, 500*100, prob = c(0.3, 0.2, 0.02, 0.35, 0.1, 0.03), replace = TRUE) %>%
+  str_split_fixed(pattern = "_", n = 2) %>% as.data.frame() %>%
+  mutate(sim_nr = rep(1:100, each = 500))
+
+barboxplot_comparison(c("V1", "V2"), sim_data, test_data)
+barboxplot_comparison(c("V2", "V1"), sim_data, test_data)
+
+
+## test qqplot ----
+# obs_data
+load("data/df_example.rda")
+load("data/sim_example.rda")
+
+# sim_data
+n_sim <- nrow(df_example)
+m <- 100
+sim_raw <- rvine(copula_example, n = n_sim * m)
+sim_example <- cbind(
+  sim_raw,
+  simulation_nr = rep(1:m, each = n_sim)) %>%
+  as.data.frame()
+usethis::use_data(sim_example)
+
+# test
+test_qq <- get_qqplot(sim_data = sim_example,
+                      obs_data = df_example,
+                      sim_nr = 100,
+                      conf_band = 95,
+                      var = NULL,
+                      type = "point")
+# test
+test_qqplot <- plot_qq(sim_data = sim_example,
+                       obs_data = df_example,
+                       sim_nr = 100,
+                       conf_band = 95,
+                       var = NULL,
+                       type = "point")
+
+# test with points-version qqplot
+test_qq <- get_qqplot(sim_data = sim_example,
+                      obs_data = df_example,
+                      sim_nr = 100,
+                      conf_band = 95,
+                      var = NULL,
+                      percentiles = c(10, 50, 90))

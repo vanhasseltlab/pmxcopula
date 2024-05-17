@@ -8,7 +8,7 @@
 A numeric data.frame
 }
 \source{
-Virtual population generated from copula model \url{www.starwars.com}
+Virtual population generated from copula model \url{https://doi.org/10.1002/cpt.3099}
 }
 \usage{
 df_example
