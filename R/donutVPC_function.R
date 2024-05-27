@@ -1,5 +1,4 @@
-
-#' Create donutVPCs from simulation data and observed data.
+#' Create donutVPCs From Simulation Data And Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
 #' to observations and columns correspond to covariate variables. sim_data
@@ -12,16 +11,13 @@
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
 #' @param sim_nr An integer indicating the number of simulations.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
-#' covariate names from the copula. If set to NULL, every possible covariate
+#' covariate names. If set to NULL, every possible covariate
 #' pair is included.
 #' @param conf_band A numeric value indicating the empirical confidence level
-#' for the width of the bands; e.g., 95 indicates 95% confidence interval.
+#' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
 #'
-#' @return A list containing ggplot objects of donutVPCs for covariate pairs.
-#' @export
-#'
-#' @examples
+#' @noRd
 get_donutVPC <- function(sim_data,
                          obs_data,
                          percentiles = c(10, 50, 90),
@@ -42,7 +38,7 @@ get_donutVPC <- function(sim_data,
   # generate obs_contours
   obs_contours <- NULL
   for (p in 1:nrow(pairs_matrix)) {
-    kd_obs <- ks::kde(obs_data %>% select(pairs_matrix[p, ]), compute.cont = TRUE)
+    kd_obs <- ks::kde(obs_data |> dplyr::select(pairs_matrix[p, ]), compute.cont = TRUE)
     contour_obs <- with(kd_obs, contourLines(x = eval.points[[1]], y = eval.points[[2]],
                                              z = estimate, levels = cont[paste0(100-percentiles,"%")]))
     obs_contours <- rbind.data.frame(obs_contours, extract_contour_df(contour_obs, kd_obs$cont, 0, pairs_matrix[p, ]))
@@ -63,9 +59,9 @@ get_donutVPC <- function(sim_data,
   plot_list <- list()
   for (i in 1:nrow(pairs_matrix)) {
     var_pair <- paste0(pairs_matrix[i, 1], "-", pairs_matrix[i, 2])
-    plot_list[[var_pair]] <- obs_contours %>%
-      dplyr::mutate(key = paste(percentile, var1, var2, sim_nr, circle)) %>%
-      dplyr::filter(var1 == pairs_matrix[i, 1], var2 == pairs_matrix[i, 2]) %>%
+    plot_list[[var_pair]] <- obs_contours |>
+      dplyr::mutate(key = paste(percentile, var1, var2, sim_nr, circle)) |>
+      dplyr::filter(var1 == pairs_matrix[i, 1], var2 == pairs_matrix[i, 2]) |>
       ggplot2::ggplot() +
       sim_contours_gg[[i]] +
       ggplot2::geom_path(ggplot2::aes(x = x, y = y, color = percentile, group = key), color = "black") +
@@ -79,7 +75,7 @@ get_donutVPC <- function(sim_data,
 }
 
 
-#' Output donutVPCs from simulation data and observed data.
+#' Output donutVPCs From Simulation Data And Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
 #' to observations and columns correspond to covariate variables. sim_data
@@ -92,17 +88,19 @@ get_donutVPC <- function(sim_data,
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
 #' @param sim_nr An integer indicating the number of simulations.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
-#' covariate names from the copula. If set to NULL, every possible covariate
+#' covariate names. If set to NULL, every possible covariate
 #' pair is included.
 #' @param conf_band A numeric value indicating the empirical confidence level
-#' for the width of the bands; e.g., 95 indicates 95% confidence interval.
+#' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
 #'
 #' @return A patchwork object of donutVPC for covariate pairs.
 #' @export
 #'
 #' @examples
-plot_donut <- function(sim_data,
+#' donutVPC(sim_data = pediatric_sim, obs_data = pediatric_3cov, percentiles = c(10, 50, 90), sim_nr = 100, pairs_matrix = NULL, conf_band = 95, colors_bands = c("#99E0DC", "#E498B4"))
+#'
+donutVPC <- function(sim_data,
                        obs_data,
                        percentiles = c(10, 50, 90),
                        sim_nr,
@@ -110,6 +108,9 @@ plot_donut <- function(sim_data,
                        conf_band = 95,
                        colors_bands = c("#99E0DC", "#E498B4")) {
 
+  if (is.null(pairs_matrix)) {
+    pairs_matrix <- t(combn(colnames(obs_data), 2))
+  }
 
   # generate the geom data for dount VPC
   donutVPC_geom <- get_donutVPC(sim_data = sim_data,
@@ -120,47 +121,7 @@ plot_donut <- function(sim_data,
                                 conf_band = conf_band,
                                 colors_bands = colors_bands)
 
-  plot_donuts <- wrap_plots(donutVPC_geom, nrow = floor(sqrt(nrow(pairs_matrix))))
+  plot_donuts <- patchwork::wrap_plots(donutVPC_geom, nrow = floor(sqrt(nrow(pairs_matrix))))
 
   return(plot_donuts)
 }
-
-# function to generate the contours from the simulation dataset
-simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL) {
-
-    # check if the covariate names exist in sim_data
-    if (is.null(pairs_matrix)) {
-      var <- setdiff(colnames(sim_data), "simulation_nr")
-      pairs_matrix <- t(combn(var, 2))
-    } else if (!all(c(pairs_matrix) %in% colnames(sim_data))) {
-      stop("Covariate names in pairs_matrix differ from names in sim_data")
-    }
-
-    # check if the simulation_nr exists in sim_data
-    if (!("simulation_nr" %in% colnames(sim_data))) {
-      stop("simulation_nr does not exist in sim_data")
-    }
-
-    # calculate contours for every percentile and every covariate combination
-    sim_contours_list <- list()
-    i <- 1
-    for (b in 1 : sim_nr) {
-      cat("\r", "Calculate contours simulation:", b, "/", sim_nr)
-      sim_data_b <- sim_data[sim_data$simulation_nr == b, ]
-      for (p in 1 : nrow(pairs_matrix)) {
-        #use ks for density computation
-        kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]], compute.cont = TRUE, approx.cont = FALSE)
-        contour_sim <- with(kd_sim, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
-                                                            z = estimate, levels = cont[paste0(100-percentiles, "%")]))
-        #extract information
-        sim_contours_list[[i]] <- extract_contour_df(contour_sim, kd_sim$cont, b, pairs_matrix[p, ])
-        i <- i + 1
-
-      }
-
-    }
-    cat("\n")
-    sim_contours <- dplyr::bind_rows(sim_contours_list)
-
-    return(sim_contours)
-  }

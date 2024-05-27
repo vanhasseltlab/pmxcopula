@@ -2,7 +2,7 @@
 % Please edit documentation in R/qqplot_function.R
 \name{plot_qq}
 \alias{plot_qq}
-\title{Output qqplots from simulation data and observed data.}
+\title{Output qqplots From Simulation Data And Observed Data}
 \usage{
 plot_qq(
   sim_data,
@@ -10,7 +10,8 @@ plot_qq(
   sim_nr = NULL,
   conf_band = 95,
   var = NULL,
-  type = "ribbon"
+  type = "ribbon",
+  qq_color = "lightblue"
 )
 }
 \arguments{
@@ -25,7 +26,7 @@ to observations and columns correspond to variables.}
 \item{sim_nr}{An integer indicating the number of simulations.}
 
 \item{conf_band}{A numeric value indicating the empirical confidence level
-for the width of the bands; e.g., 95 indicates 95% confidence interval.}
+for the width of the bands; e.g., 95 indicates 95\% confidence interval.}
 
 \item{var}{A character vector containing multiple characters. The
 vector represents the variables of interest for generating qqplots. If
@@ -33,11 +34,16 @@ set to NULL, every covariate is included.}
 
 \item{type}{A character of plotting types. Either "ribbon" or"point".
 "ribbon" corresponds to visualizing the confidence level defined in "conf_band" as shaded area,
-and "point" corresponds to visualizing all the simulation quantiles as individual points.}
+and "point" corresponds to visualizing all simulation quantiles as individual points.}
+
+\item{qq_color}{A character of color.}
 }
 \value{
-A patchwork object of qqplots for covariates.
+A patchwork object of qqplots for variables.
 }
 \description{
-Output qqplots from simulation data and observed data.
+Output qqplots From Simulation Data And Observed Data
+}
+\examples{
+plot_qq(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 100, conf_band = 95, var = NULL, type = "ribbon")
 }

@@ -1,16 +1,15 @@
-#TO-DO: add categroical variable (boxplots)
-#c("#3ABAC1","#969696")
-#c("#F46E32", "#5063B9")
-#' Visualize and compare the dependency structures of simulation data and observed data.
+
+#' Visualize And Compare Dependency Structures Of Simulation Data And Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset.
 #' @param obs_data A data.frame containing observation dataset.
 #' @param variables A character vector containing multiple characters. The
 #' vector represents the variables of interest for plotting.
 #' If set to NULL, every covariate is included.
-#' @param sim_nr An integer indicating the number of simulations.
-#' In each simulation, the amount of simulated individuals equals the amount of
-#' individuals in observation dataset.
+#' @param sim_nr An integer indicating the simulation data to use. If there are
+#' multiple simulations or a column named "simulation_nr" in the simulation
+#' dataset, select one specific simulation to visualize the distribution; if such column does not exist,
+#' the default value of 1 will be used to visualize the entire silumation dataset.
 #' @param title Title of the figure.
 #' @param plot_type A character vector of plotting types. Either "density",
 #' "points", or "both".
@@ -21,24 +20,33 @@
 #' @param caption A logical value to indicate define the size of caption.
 #'
 #' @return A graphical object.
+#'
 #' @export
 #'
 #' @importFrom ggplot2 ggplot aes geom_point geom_density2d theme_bw theme geom_boxplot scale_y_continuous scale_x_continuous scale_fill_manual
-plot_sim_obs_distribution <- function(sim_data, obs_data, variables = NULL,
+#' @examples
+#' plot <- plot_mvdist(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 1, pick_color = c("#3ABAC1","#969696"), plot_type = "density")
+#' plot
+#'
+plot_mvdist <- function(sim_data, obs_data, variables = NULL,
                                       sim_nr = 1, title = NULL, plot_type = "points",
                                       pick_color = c("#3ABAC1","#969696"), full_plot = TRUE,
                                       caption = NULL) {
+
+  if ("simulation_nr" %in% colnames(sim_data)) {
+    # Use only 1 simulation for plotting
+    sim_data <- sim_data |>
+      filter(simulation_nr %in% sim_nr) |>
+      select(-simulation_nr)
+  }
+
   #Combine truth and simulation results
-  total_data <- obs_data %>% dplyr::mutate(type = "observed") %>%
-    dplyr::bind_rows(sim_data %>% dplyr::mutate(type = "simulated"))
+  total_data <- obs_data |> dplyr::mutate(type = "observed") |>
+    dplyr::bind_rows(sim_data |> dplyr::mutate(type = "simulated"))
 
   total_data$type <- factor(total_data$type, levels = c("simulated", "observed"))
   names(pick_color) <- NULL
-  if ("simulation_nr" %in% colnames(sim_data)) {
-    # Use only 1 simulation for plotting
-    total_data <- total_data %>%
-      filter(simulation_nr %in% sim_nr | is.na(simulation_nr))
-  }
+
 
   if (is.null(variables)) {
     variables <- setdiff(colnames(sim_data), "simulation_nr")
@@ -46,11 +54,11 @@ plot_sim_obs_distribution <- function(sim_data, obs_data, variables = NULL,
   #variables_str <- paste0("`", variables, "`")
 
   point_plots <- density_plots <- list()
-  combination_variables <- t(combn(variables, 2)) #cbind(t(combn(variables, 2)), t(combn(variables_str, 2)))
+  combination_variables <- t(combinat::combn(variables, 2)) #cbind(t(combn(variables, 2)), t(combn(variables_str, 2)))
   for (i in 1:nrow(combination_variables)) {
 
     combination <- paste(combination_variables[i, ], collapse = "_")
-    part_data <- total_data[, c(combination_variables[i, ], "type")] %>%
+    part_data <- total_data[, c(combination_variables[i, ], "type")] |>
       filter(rowSums(is.na(total_data[, combination_variables[i, ]])) == 0)
 
     if (plot_type != "density") {
@@ -96,7 +104,7 @@ plot_sim_obs_distribution <- function(sim_data, obs_data, variables = NULL,
 
   univariate_plots <- list()
   for (i in variables) {
-    univariate_plots[[i]] <- total_data %>%
+    univariate_plots[[i]] <- total_data |>
       ggplot2::ggplot(ggplot2::aes(y = .data[[i]], x = type, fill = type)) +
       ggplot2::geom_boxplot() +
       ggplot2::scale_fill_manual(values = c(pick_color[1], pick_color[2])) +

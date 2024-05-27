@@ -2,7 +2,7 @@
 % Please edit documentation in R/mVPC_function.R
 \name{mVPC}
 \alias{mVPC}
-\title{Output the multivariate visual predictive check plot (mVPC).}
+\title{Output Multivariate Visual Predictive Check Plot (mVPC)}
 \usage{
 mVPC(
   sim_data,
@@ -42,11 +42,14 @@ percentiles of the density distribution that appear in the VPC donut plot;
 e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.}
 
 \item{conf_band}{A numeric value indicating the empirical confidence level
-for the width of the bands; e.g., 95 indicates 95% confidence interval.}
+for the width of the bands; e.g., 95 indicates 95\% confidence interval.}
 }
 \value{
 Multivariate visual predictive check plot which contains qqplots and donutVPCs.
 }
 \description{
-Output the multivariate visual predictive check plot (mVPC).
+The multivariate visual predictive check plot (mVPC) combines donutVPCs with qqplots.
+}
+\examples{
+mVPC(sim_data = pediatric_sim, obs_data = pediatric_3cov, var = NULL, sim_nr = 100, percentiles = c(10, 50, 90), colors_bands = c("#99E0DC", "#E498B4"))
 }

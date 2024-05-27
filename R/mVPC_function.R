@@ -1,8 +1,6 @@
-# a function to output qqplots and donutVPC at the same time in a designed frame (mVPC)
-#library(gridExtra)
-
-
-#' Output the multivariate visual predictive check plot (mVPC).
+#' Output Multivariate Visual Predictive Check Plot (mVPC)
+#'
+#' The multivariate visual predictive check plot (mVPC) combines donutVPCs with qqplots.
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
 #' to observations and columns correspond to covariate variables. sim_data
@@ -21,12 +19,13 @@
 #' percentiles of the density distribution that appear in the VPC donut plot;
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
 #' @param conf_band A numeric value indicating the empirical confidence level
-#' for the width of the bands; e.g., 95 indicates 95% confidence interval.
+#' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #'
 #' @return Multivariate visual predictive check plot which contains qqplots and donutVPCs.
+#'
 #' @export
 #'
-#' @examples
+#' @examples mVPC(sim_data = pediatric_sim, obs_data = pediatric_3cov, var = NULL, sim_nr = 100, percentiles = c(10, 50, 90), colors_bands = c("#99E0DC", "#E498B4"))
 mVPC <- function(sim_data,
                  obs_data,
                  var = NULL,
@@ -54,8 +53,7 @@ mVPC <- function(sim_data,
                         sim_nr = sim_nr,
                         conf_band = conf_band ,
                         var = var,
-                        percentiles = percentiles,
-                        colors_bands = colors_bands)
+                        title = FALSE)
 
   # generate subplots for donutplots
   donutVPCs <- get_donutVPC(sim_data = sim_data,

@@ -9,6 +9,18 @@ library(ks)
 library(tidyverse) #dplyr + ggplot
 library(ggplot2)
 library(pmxcopula)
+library(tibble)
+library(patchwork)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(ks)
+library(sf)
+library(dplyr)
+library(pracma)
+
+
+
 #make some data
 set.seed(123)
 df_example <- read.csv("data/pediatrics_example_data.csv", row.names = 1)
@@ -195,3 +207,110 @@ test_qq <- get_qqplot(sim_data = sim_example,
                       conf_band = 95,
                       var = NULL,
                       percentiles = c(10, 50, 90))
+
+# test the selective simulation
+xmin = c(10, NaN, 200)
+xmax = c(100, NaN, 1000)
+copula = copula_example
+# validate: PASS
+pseudo_sim_validate <- pseudo_sim %>%
+  filter(CREA > 10 & CREA < 100) %>%
+  filter(BW > 200 & BW < 1000)
+category  = list(c("male", "female"),"all", "all") # should be the form of list
+pseudo_sim <- data.frame(age = c(1:10),
+                         gender = c(rep("male",3), rep("female",3),rep("unknown",4)),
+                         height = runif(10, min = 100, max = 200))
+rcopula_sub_test <- rscopula(copula = copula,
+                                 n_sim = 200,
+                                 xmin = c(10, NaN, 200),
+                                 xmax = NULL,
+                                 category = NULL,
+                                 var_types = c("c", "c","c"))
+
+# test marginal metric calculation
+mrg_test <- mrg_metrics(df_example)
+# test marginal metric comparison
+test_compare <- marginal_metric(sim_data = sim_example,
+                                obs_data = df_example,
+                                sim_nr = 100)
+
+# test correlation
+test_cor <- get_correlation(obs_data, pairs_matrix = NULL)
+
+# fit a copula for MIMIC data
+MIMIC_cop <- vine(MIMIC_data,
+                  copula_controls = list(family_set = "parametric"),
+                  margins_controls = list(mult = 1),
+                  cores = 1)
+filepath <- "inst/extdata/MIMIC_cop.Rdata"
+save(MIMIC_cop, file = filepath)
+# to load the MIMIC_cop
+system.file("extdata", "MIMIC_cop.Rdata", package = "pmxcopula")
+
+# simulate from MIMIC_cop
+MIMIC_sim <- rvine(MIMIC_cop$nobs*100, MIMIC_cop) %>%
+  as.data.frame() %>%
+  cbind(simulation_nr = rep(1:100, each = MIMIC_cop$nobs))
+usethis::use_data(MIMIC_sim)
+NHANES_12cov <- NHANES_data
+usethis::use_data(NHANES_12cov,overwrite = TRUE)
+
+############################
+############################
+############################
+
+library(rvinecopulib)
+# fit a copula for pediatric data
+pediatric_cop <- vine(pediatric_3cov,
+                  copula_controls = list(family_set = "parametric"),
+                  margins_controls = list(mult = 1),
+                  cores = 1)
+filepath <- "inst/extdata/pediatric_cop.Rdata"
+save(pediatric_cop, file = filepath)
+# to load the pediatric_cop
+system.file("extdata", "pediatric_cop.Rdata", package = "pmxcopula")
+
+# simulate from pediatric_cop
+pediatric_sim <- rvine(pediatric_cop$nobs*100, pediatric_cop) %>%
+  as.data.frame() %>%
+  cbind(simulation_nr = rep(1:100, each = pediatric_cop$nobs))
+usethis::use_data(pediatric_sim)
+
+NHANES_12cov <- NHANES_data
+usethis::use_data(NHANES_12cov,overwrite = TRUE)
+
+# test overlap
+pediatric_sim_10 <- pediatric_sim %>%
+  filter(simulation_nr < 11)
+mtr_dependency <- pmxcopula::calc_dependency(sim_data = pediatric_sim_10, obs_data = pediatric_3cov, pairs_matrix = NULL, percentile = 95, sim_nr = 10)
+
+# test marginal
+mtr_margin <- calc_margin(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 100, var = NULL, aim_statistic = c("mean", "median", "sd"))
+#' mtr_margin
+
+# test 1d density curve
+plot_1dist(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 100, pick_color = c("#3ABAC1","#969696"), var = NULL)
+
+# donutVPC
+donutVPC(sim_data = pediatric_sim, obs_data = pediatric_3cov, percentiles = c(10, 50, 90), sim_nr = 100, pairs_matrix = NULL, conf_band = 95, colors_bands = c("#99E0DC", "#E498B4"))
+
+# rscopula
+# test the selective simulation
+xmin = c(10, NaN, 200)
+xmax = c(100, NaN, 1000)
+copula = copula_example
+# validate: PASS
+pseudo_sim_validate <- pseudo_sim %>%
+  filter(CREA > 10 & CREA < 100) %>%
+  filter(BW > 200 & BW < 1000)
+category  = list(c("male", "female"),"all", "all") # should be the form of list
+pseudo_sim <- data.frame(age = c(1:10),
+                         gender = c(rep("male",3), rep("female",3),rep("unknown",4)),
+                         height = runif(10, min = 100, max = 200))
+rcopula_sub_test <- rscopula(copula = pediatric_cop,
+                             n_sim = 200,
+                             xmin = c(10, NaN, 200),
+                             xmax = NULL,
+                             category = NULL,
+                             var_types = c("c", "c","c"))
+mtr_olp <- pmxcopula::calc_overlap(sim_data = pediatric_sim_10, obs_data = pediatric_3cov, pairs_matrix = NULL, percentile = 95, sim_nr = 10)
