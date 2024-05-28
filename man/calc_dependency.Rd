@@ -32,5 +32,12 @@ A data.frame containing the dependency metrics calculated for simulation data an
 Compare Dependency Metric Between Simulation Data And Observed Data
 }
 \examples{
-mtr_dependency <- calc_dependency(sim_data = pediatric_sim, obs_data = pediatric_3cov, pairs_matrix = NULL, percentile = 95, sim_nr = 100)
+mtr_dependency <- calc_dependency(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    pairs_matrix = NULL,
+    percentile = 95,
+    sim_nr = 100
+    )
+
 }

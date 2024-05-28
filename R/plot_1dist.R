@@ -18,7 +18,14 @@
 #' @export
 #'
 #' @examples
-#' plot_1dist(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 100, pick_color = c("#3ABAC1","#969696"), var = NULL)
+#' plot <- plot_1dist(
+#'     sim_data = pediatric_sim,
+#'     obs_data = pediatric_3cov,
+#'     sim_nr = 100,
+#'     pick_color = c("#3ABAC1","#969696"),
+#'     var = NULL
+#'     )
+#'
 plot_1dist <- function(sim_data, obs_data, sim_nr = NULL, var = NULL, pick_color = c("#3ABAC1","#969696")) {
 
   # determine the variables of interest ----
@@ -41,10 +48,10 @@ plot_1dist <- function(sim_data, obs_data, sim_nr = NULL, var = NULL, pick_color
   }
 
 
-  long_sim <- reshape::melt(sim_data, id.vars = "simulation_nr") |>
+  long_sim <- reshape2::melt(sim_data, id.vars = "simulation_nr") |>
     dplyr::mutate(type = "Virtual population")
 
-  long_obs <- reshape::melt(obs_data) |>
+  long_obs <- reshape2::melt(obs_data) |>
     dplyr::mutate(simulation_nr = 101,
            type = "Observed population")
 
@@ -63,17 +70,17 @@ plot_1dist <- function(sim_data, obs_data, sim_nr = NULL, var = NULL, pick_color
     # guides(color = guide_legend(byrow = TRUE)) +
     ggplot2::guides(color = "none", linewidth = "none") +
     ggplot2::theme_bw() +
-    ggplot2::theme(strip.background = element_rect(fill = "white"), panel.grid.minor.x = element_blank(),
-          panel.grid.major.x = element_blank(),
-          legend.title = element_blank(),
+    ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"), panel.grid.minor.x = ggplot2::element_blank(),
+          panel.grid.major.x = ggplot2::element_blank(),
+          legend.title = ggplot2::element_blank(),
           # legend.position = c(.55, .10),
           legend.direction = "vertical",
-          legend.spacing.y = unit(0.5, 'cm'),
+          legend.spacing.y = ggplot2::unit(0.5, 'cm'),
           legend.box.just = "right",
-          legend.margin = margin(6, 6, 6, 6),
-          strip.text.x = element_text(size=6.5),
-          axis.text.x = element_text(size=5.5),
-          axis.title=element_text(size=10))
+          legend.margin = ggplot2::margin(6, 6, 6, 6),
+          strip.text.x = ggplot2::element_text(size=6.5),
+          axis.text.x = ggplot2::element_text(size=5.5),
+          axis.title = ggplot2::element_text(size=10))
 
   return(density_curve_1D)
 

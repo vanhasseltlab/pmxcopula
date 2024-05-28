@@ -6,6 +6,6 @@
 \alias{pmxcopula-package}
 \title{pmxcopula: Copula Evaluation in Pharmacometric Anaylsis}
 \description{
-A comprehensive framework for copula model evaluation and virtual population simulation in pharmacometric analysis. Provides functionality for calculating the marginal metrics (mean, median, standard deviation and percentiles) and dependency metrics (correlation and overlap percentage) of the observed and simulated populations, generating visual predictive check plots (qqplots and donutVPCs) of the copula model, applying subset simulation for specific group of individuals,and more.
+A comprehensive framework for copula model evaluation and virtual population simulation in pharmacometric analysis. Provides functionality for calculating the marginal metrics (mean, median, standard deviation and percentiles) and dependency metrics (correlation and overlap percentage) of the observed and simulated populations, generating visual predictive check plots (qqplots and donutVPCs) of the copula model, applying subset simulation for specific group of individuals, and more.
 }
 \keyword{internal}

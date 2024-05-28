@@ -106,7 +106,7 @@ simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL
   # check if the covariate names exist in sim_data
   if (is.null(pairs_matrix)) {
     var <- setdiff(colnames(sim_data), "simulation_nr")
-    pairs_matrix <- t(combn(var, 2))
+    pairs_matrix <- t(combinat::combn(var, 2))
   } else if (!all(c(pairs_matrix) %in% colnames(sim_data))) {
     stop("Covariate names in pairs_matrix differ from names in sim_data")
   }
@@ -344,7 +344,7 @@ extract_geom_donutVPC <- function(sim_data,
   }
 
   if (is.null(pairs_matrix)) {
-    pairs_matrix <- t(combn(var, 2))
+    pairs_matrix <- t(combinat::combn(var, 2))
   } else if (!all(c(pairs_matrix) %in% var)) {
     #check for names not matching between vine and pairs_matrix
     stop("Covariate names in pairs_matrix differ from names in vine")

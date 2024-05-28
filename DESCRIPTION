@@ -4,21 +4,29 @@ Title: Copula Evaluation in Pharmacometric Anaylsis
 Version: 0.1.0
 Author: Laura B. Zwep, Yuchen Guo
 Maintainer: Yuchen Guo <iguoyuchen@outlook.com>
-Description: Facilitate the evaluation of copula model for virtual population generation in pharmacometric analysis.
-    Calculate the overlap metric based on the 2-dimensional densities of the observed and simulated populations.
-    Conduct the donut VPC check of the copula model.
+Description: A comprehensive framework for copula model evaluation and virtual population simulation in pharmacometric analysis. 
+    Provides functionality for calculating the marginal metrics (mean, median, standard deviation and percentiles) 
+    and dependency metrics (correlation and overlap percentage) of the observed and simulated populations, generating 
+    visual predictive check plots (qqplots and donutVPCs) of the copula model, applying subset simulation for specific 
+    group of individuals, and more.
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 2.10)
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.5.0)
 Config/testthat/edition: 3
 Imports: 
+    combinat,
     dplyr,
-    ggplot2,
+    ggplot2 (>= 3.3.0),
+    gridExtra,
     ks,
+    patchwork,
+    reshape2,
     rvinecopulib,
-    sf
+    sf,
+    tibble,
+    tidyr
 RoxygenNote: 7.2.3

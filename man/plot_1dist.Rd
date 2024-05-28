@@ -37,5 +37,12 @@ A ggplot object of density curves for variables.
 Plot Univariate Density Curves From Simulation Data And Observed Data
 }
 \examples{
-plot_1dist(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 100, pick_color = c("#3ABAC1","#969696"), var = NULL)
+plot <- plot_1dist(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    sim_nr = 100,
+    pick_color = c("#3ABAC1","#969696"),
+    var = NULL
+    )
+
 }

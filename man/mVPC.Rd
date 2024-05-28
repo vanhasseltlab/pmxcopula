@@ -51,5 +51,12 @@ Multivariate visual predictive check plot which contains qqplots and donutVPCs.
 The multivariate visual predictive check plot (mVPC) combines donutVPCs with qqplots.
 }
 \examples{
-mVPC(sim_data = pediatric_sim, obs_data = pediatric_3cov, var = NULL, sim_nr = 100, percentiles = c(10, 50, 90), colors_bands = c("#99E0DC", "#E498B4"))
+plot <- mVPC(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    var = NULL,
+    sim_nr = 100,
+    percentiles = c(10, 50, 90),
+    colors_bands = c("#99E0DC", "#E498B4"))
+
 }

@@ -98,7 +98,15 @@ get_donutVPC <- function(sim_data,
 #' @export
 #'
 #' @examples
-#' donutVPC(sim_data = pediatric_sim, obs_data = pediatric_3cov, percentiles = c(10, 50, 90), sim_nr = 100, pairs_matrix = NULL, conf_band = 95, colors_bands = c("#99E0DC", "#E498B4"))
+#' plot <- donutVPC(
+#'     sim_data = pediatric_sim,
+#'     obs_data = pediatric_3cov,
+#'     percentiles = c(10, 50, 90),
+#'     sim_nr = 100,
+#'     pairs_matrix = NULL,
+#'     conf_band = 95,
+#'     colors_bands = c("#99E0DC", "#E498B4")
+#'     )
 #'
 donutVPC <- function(sim_data,
                        obs_data,
@@ -109,7 +117,7 @@ donutVPC <- function(sim_data,
                        colors_bands = c("#99E0DC", "#E498B4")) {
 
   if (is.null(pairs_matrix)) {
-    pairs_matrix <- t(combn(colnames(obs_data), 2))
+    pairs_matrix <- t(combinat::combn(colnames(obs_data), 2))
   }
 
   # generate the geom data for dount VPC

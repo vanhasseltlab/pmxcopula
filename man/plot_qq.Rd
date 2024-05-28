@@ -45,5 +45,12 @@ A patchwork object of qqplots for variables.
 Output qqplots From Simulation Data And Observed Data
 }
 \examples{
-plot_qq(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 100, conf_band = 95, var = NULL, type = "ribbon")
+plot <- plot_qq(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    sim_nr = 100,
+    conf_band = 95,
+    var = NULL,
+    type = "ribbon"
+    )
 }

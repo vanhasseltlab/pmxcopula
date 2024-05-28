@@ -25,7 +25,15 @@
 #'
 #' @export
 #'
-#' @examples mVPC(sim_data = pediatric_sim, obs_data = pediatric_3cov, var = NULL, sim_nr = 100, percentiles = c(10, 50, 90), colors_bands = c("#99E0DC", "#E498B4"))
+#' @examples
+#' plot <- mVPC(
+#'     sim_data = pediatric_sim,
+#'     obs_data = pediatric_3cov,
+#'     var = NULL,
+#'     sim_nr = 100,
+#'     percentiles = c(10, 50, 90),
+#'     colors_bands = c("#99E0DC", "#E498B4"))
+#'
 mVPC <- function(sim_data,
                  obs_data,
                  var = NULL,
@@ -45,7 +53,7 @@ mVPC <- function(sim_data,
   }
 
   # determine the variable pairs of interest ----
-  pairs_matrix <- t(combn(var, 2))
+  pairs_matrix <- t(combinat::combn(var, 2))
 
   # generate subplots for qqplots
   qqplots <- get_qqplot(sim_data = sim_data,

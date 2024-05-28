@@ -53,14 +53,19 @@ mrg_metrics <- function(data, var = NULL) {
 #' @export
 #'
 #' @examples
-#' mtr_margin <- calc_margin(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 100, var = NULL, aim_statistic = c("mean", "median", "sd"))
-#' mtr_margin
+#' mtr_margin <- calc_margin(
+#'     sim_data = pediatric_sim,
+#'     obs_data = pediatric_3cov,
+#'     sim_nr = 100,
+#'     var = NULL,
+#'     aim_statistic = c("mean", "median", "sd")
+#'     )
+#'
 calc_margin <- function(sim_data,
                             obs_data,
                             sim_nr = NULL,
                             var = NULL,
                             aim_statistic = NULL) {
-  value <- observed <- statistic <- NULL
 
   sim_data <- sim_data[, colSums(is.na(sim_data)) != nrow(sim_data)]
 

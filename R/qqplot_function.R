@@ -99,7 +99,7 @@ get_qqplot <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = 
       } else if (title == TRUE){
         qqplot <- qqplot +
           ggplot2::labs(x = "observed quantiles", y = "simulated quantiles",  title = var[c]) +
-          theme(plot.title = element_text(hjust = 0.5),
+          ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                 aspect.ratio = 1)
       }
 
@@ -136,7 +136,14 @@ get_qqplot <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = 
 #' @export
 #'
 #' @examples
-#' plot_qq(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 100, conf_band = 95, var = NULL, type = "ribbon")
+#' plot <- plot_qq(
+#'     sim_data = pediatric_sim,
+#'     obs_data = pediatric_3cov,
+#'     sim_nr = 100,
+#'     conf_band = 95,
+#'     var = NULL,
+#'     type = "ribbon"
+#'     )
 plot_qq <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = NULL, type = "ribbon", qq_color = "lightblue") {
 
   # determine the variables of interest ----

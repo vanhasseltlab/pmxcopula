@@ -17,7 +17,6 @@ library(tidyr)
 library(ks)
 library(sf)
 library(dplyr)
-library(pracma)
 
 
 

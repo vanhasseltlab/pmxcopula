@@ -38,6 +38,12 @@ along with the differences between them.
 Compare Marginal Metrics Between Simulation Data and Observed Data
 }
 \examples{
-mtr_margin <- calc_margin(sim_data = pediatric_sim, obs_data = pediatric_3cov, sim_nr = 100, var = NULL, aim_statistic = c("mean", "median", "sd"))
-mtr_margin
+mtr_margin <- calc_margin(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    sim_nr = 100,
+    var = NULL,
+    aim_statistic = c("mean", "median", "sd")
+    )
+
 }

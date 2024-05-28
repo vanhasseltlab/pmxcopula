@@ -38,6 +38,10 @@ Simulate Subset Virtual Population
 # load a copula model: pediatric_cop
 file_path <- system.file("extdata", "pediatric_cop.Rdata", package = "pmxcopula")
 load(file_path)
-pediatric_sub <- rscopula(pediatric_cop, n_sim = 100, xmin = c(10,100, 100),
-var_types = c("c", "c", "c"))
+pediatric_sub <- rscopula(
+    pediatric_cop,
+    n_sim = 100,
+    xmin = c(10,100, 100),
+    var_types = c("c", "c", "c")
+    )
 }

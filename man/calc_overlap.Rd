@@ -39,5 +39,12 @@ A data.frame containing the overlap percentage of variable pair(s).
 Calculate Overlap Percentage Of Simulation Data And Observed Data
 }
 \examples{
-overlap <- calc_overlap(sim_data = pediatric_sim, obs_data = pediatric_3cov, pairs_matrix = matrix(c("age" ,"BW" ,"BW" ,"CREA" ), nrow = 2, ncol = 2), percentile = 95, sim_nr = 100, summarize = FALSE)
+overlap <- calc_overlap(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    pairs_matrix = matrix(c("age" ,"BW" ,"BW" ,"CREA" ), nrow = 2, ncol = 2),
+    percentile = 95,
+    sim_nr = 100,
+    summarize = FALSE)
+
 }

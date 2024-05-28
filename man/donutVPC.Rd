@@ -45,6 +45,14 @@ A patchwork object of donutVPC for covariate pairs.
 Output donutVPCs From Simulation Data And Observed Data
 }
 \examples{
-donutVPC(sim_data = pediatric_sim, obs_data = pediatric_3cov, percentiles = c(10, 50, 90), sim_nr = 100, pairs_matrix = NULL, conf_band = 95, colors_bands = c("#99E0DC", "#E498B4"))
+plot <- donutVPC(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    percentiles = c(10, 50, 90),
+    sim_nr = 100,
+    pairs_matrix = NULL,
+    conf_band = 95,
+    colors_bands = c("#99E0DC", "#E498B4")
+    )
 
 }

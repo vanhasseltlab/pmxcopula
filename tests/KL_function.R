@@ -25,6 +25,7 @@ Y <- cbind(Y1,Y2,Y3)
 kld_est_brnn(X, Y)
 kld_est_nn(X, Y)
 
+kldest::kld_est_kde1(X, Y)
 
 # our example
 # nn = 100

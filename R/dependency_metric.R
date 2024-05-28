@@ -18,10 +18,17 @@
 #' @export
 #'
 #' @examples
-#' overlap <- calc_overlap(sim_data = pediatric_sim, obs_data = pediatric_3cov, pairs_matrix = matrix(c("age" ,"BW" ,"BW" ,"CREA" ), nrow = 2, ncol = 2), percentile = 95, sim_nr = 100, summarize = FALSE)
+#' overlap <- calc_overlap(
+#'     sim_data = pediatric_sim,
+#'     obs_data = pediatric_3cov,
+#'     pairs_matrix = matrix(c("age" ,"BW" ,"BW" ,"CREA" ), nrow = 2, ncol = 2),
+#'     percentile = 95,
+#'     sim_nr = 100,
+#'     summarize = FALSE)
+#'
 calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, sim_nr, summarize = FALSE) {
 
-  V1 <- V2 <- No <- statistic <- var_pair <- ovlp <- Var1 <- Var2 <- Sim_N <- sd <- NULL
+  # V1 <- V2 <- No <- statistic <- var_pair <- ovlp <- Var1 <- Var2 <- Sim_N <- sd <- NULL
 
   if (is.null(pairs_matrix)) {
     pairs_matrix <- t(combinat::combn(colnames(obs_data), 2))
@@ -131,7 +138,14 @@ calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, si
 #' @export
 #'
 #' @examples
-#' mtr_dependency <- calc_dependency(sim_data = pediatric_sim, obs_data = pediatric_3cov, pairs_matrix = NULL, percentile = 95, sim_nr = 100)
+#' mtr_dependency <- calc_dependency(
+#'     sim_data = pediatric_sim,
+#'     obs_data = pediatric_3cov,
+#'     pairs_matrix = NULL,
+#'     percentile = 95,
+#'     sim_nr = 100
+#'     )
+#'
 calc_dependency <- function(sim_data, obs_data,
                               pairs_matrix = NULL,
                               percentile,
