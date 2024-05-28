@@ -1,5 +1,5 @@
 #VPC function tester
-# source("scripts/VPC_donut_functions.R")
+source("scripts/VPC_donut_functions.R")
 
 #dependencies (libraries)
 library(kde1d)
