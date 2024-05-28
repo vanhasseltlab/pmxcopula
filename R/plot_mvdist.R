@@ -59,7 +59,7 @@ plot_mvdist <- function(sim_data, obs_data, variables = NULL,
   #variables_str <- paste0("`", variables, "`")
 
   point_plots <- density_plots <- list()
-  combination_variables <- t(combinat::combn(variables, 2)) #cbind(t(combn(variables, 2)), t(combn(variables_str, 2)))
+  combination_variables <- t(combinat::combn(variables, 2))
   for (i in 1:nrow(combination_variables)) {
 
     combination <- paste(combination_variables[i, ], collapse = "_")
@@ -81,8 +81,6 @@ plot_mvdist <- function(sim_data, obs_data, variables = NULL,
       data_o <- part_data[part_data$type == "observed", ]
 
       density_plots[[combination]] <- ggplot2::ggplot(mapping = ggplot2::aes(.data[[combination_variables[i, 1]]], .data[[combination_variables[i, 2]]])) +
-        # ggplot2::geom_density2d(data = part_data[part_data$type == "simulated", ], color = pick_color[1], bins = 20) +
-        # ggplot2::geom_density2d(data = part_data[part_data$type == "observed", ],  alpha = 1, color = pick_color[2], linetype = 2, bins = 20) +
         ggplot2::geom_density2d(data = data_s, color = pick_color[1], bins = 20) +
         ggplot2::geom_density2d(data = data_o,  alpha = 1, color = pick_color[2], linetype = 2, bins = 20) +
         ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0))) +
