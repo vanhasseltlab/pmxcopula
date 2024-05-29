@@ -25,6 +25,7 @@ Imports:
     ks,
     patchwork,
     reshape2,
+    rlang,
     rvinecopulib,
     sf,
     tibble,

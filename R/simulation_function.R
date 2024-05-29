@@ -111,7 +111,7 @@ rscopula <- function(copula = copula,
           if (!is.na(xmin[c])) {
             name_c = var_c[c]
             data <- data  |>
-              dplyr::filter(name_c > xmin[c])
+              dplyr::filter(!!rlang::sym(name_c) > xmin[c])
           }
         }
       }
@@ -123,7 +123,7 @@ rscopula <- function(copula = copula,
           if (!is.na(xmax[c])) {
             name_c = var_c[c]
             data <- data  |>
-              dplyr::filter(name_c < xmax[c])
+              dplyr::filter(!!rlang::sym(name_c) < xmax[c])
           }
         }
       }
@@ -139,7 +139,7 @@ rscopula <- function(copula = copula,
           } else{
             name_d = var_d[d]
             data <- data  |>
-              dplyr::filter(name_d %in% category[[d]])
+              dplyr::filter(!!rlang::sym(name_d) %in% category[[d]])
           }
         }
       }
@@ -149,7 +149,8 @@ rscopula <- function(copula = copula,
   }
 
 
-  pseudo_sim <- filter_subset(data = pseudo_sim,
+  pseudo_sim <- filter_subset(
+                data = pseudo_sim,
                 xmin = xmin,
                 xmax = xmax,
                 category = category,
