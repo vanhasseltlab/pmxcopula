@@ -95,13 +95,9 @@ donutVPC(
     )
 ```
 
-## Citation
-
-Please use the information below to compose your citation of this software.
-
-```
-
-```
+## References
+1. [Czado C, Nagler T (2022) Vine Copula Based Modeling. Annual Review of Statistics and Its Application 9:453–477.] https://doi.org/10.1146/annurev-statistics-040220-101153
+2. [Zwep LB, Guo T, Nagler T, et al (2024) Virtual Patient Simulation Using Copula Modeling. Clinical Pharmacology & Therapeutics 115:795–804.]  https://doi.org/10.1002/cpt.3099
 
 
 ## Authors
