@@ -5,9 +5,13 @@
 <!-- badges: end -->
 
 Virtual population is an important element in pharmacometric (PMX) analysis.
-The goal of pmxcopula is to calculate the overlap percentage and plot the VPC 
-donut to evaluate the capture of the dependency structure between covariates 
-in virtual population. 
+The goal of *pmxcopula* is to facilitate the evaluation of copulas and realistic 
+populations by providing functionality for calculating the marginal metrics 
+(mean, standard deviation and percentiles) and dependency metrics (correlation 
+and overlap percentage) of the observed and simulated populations, generating 
+qqplots and donut visual predictive check plots (donutVPCs), 
+applying subset simulation for specific group of individuals, and more.
+
 
 
 ## Installation
@@ -32,54 +36,63 @@ And we are ready to go!
 
 ## Basic usage
 
-### Simulating the density contours based on the vine copula
+If the copula model could well capture the real-world population, the distribution properties of virtual population simulated should resemble the real-world population.
 
-With simulate_contours function, we could directly generate the simulated contours 
-at different percentiles based on the established vine copula model. 
+The copula model evaluation was conducted using a simulation-based strategy: by performing extensive (e.g. 100) simulations of the original dataset of the original dataset, we compare the distribution properties between original (real-world) population and simulated (virtual) populations. 
+
+### Perform extensive simulations of virtual populations for copula evaluation
 
 ``` r
-# fit the vine copula model to observation data with *rvinecopulib* package.
-library(rvinecopulib)
-copula_example <- vine(df_example, copula_controls = list(family_set = "parametric"), margins_controls = list(mult = 1))
-
-# extract the density contours of simulation data
-set.seed(123456)
-sim_contour_data <- simulate_contours(copula_example, percentiles = c(10, 50, 90), B = 10) 
+# load a copula model: pediatric_cop
+file_path <- system.file("extdata", "pediatric_cop.Rdata", package = "pmxcopula")
+load(file_path)
+pediatric_sim <- rcopula(pediatric_cop, sim_nr = 100)
 ```
 
-### Generating the VPC donut
-
-VPC donut can be generated with create_geom_donutVPC and ggVPC_donut functions.
-
+### Calculate marginal metrics
+Marginal metrics can be calculated with calc_margin() functions.
+Compare the marginal matrics [M] between observed and simulated data in terms of relative error (RE):
+    RE=(M_sim-M_obs)/M_obs 
+M_sim and M_obs represent the metrics for simulated population and observed population, respectively.
 ``` r
-# create the ggplot layers of the simulation contours
-geom_vpc <- create_geom_donutVPC(sim_contour_data, colors_bands = c("#99E0DC", "#E498B4"))
-# make the VPC_donut
-plots <- ggVPC_donut(geom_vpc, df_example)
+mtr_margin <- calc_margin(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    sim_nr = 100,
+    var = NULL,
+    aim_statistic = c("mean", "median")
+    )
 
-# visualize the plots
-names(plots)
-plots[["age-BW"]]
-plots[["CREA-age"]]
-plots[["CREA-BW"]]
 ```
 
-### Calculate the overlap percentage of density contours
+### Calculate the dependency metrics
+Pearson correlations and overlap metrics can be calculated with calc_dependency() functions.
+Overlap metrics is calculated based on specific density contours (e.g. 95th percentile density contours) of the real-world and virtualp populaions:  for each pair combination of covariates, 95th percentile density contours were calculated for observed and simulated populations. The overlap metric was computed as the Jaccard index: the ratio between the intersection area and union area. Higher overlap indicated a better description of dependence relations.
 
-Overlap percentage can be calculated with get_overlap functions.
-
+Pearson correlation quantifies linear association, while data sharing the same linear correlation could exhibit different dependency structures, and the overlap metric takes the shape or pattern of the dependency into account. Pearson correlation and overlap metric collectively depicted the joint behavior at a pairwise level and addressed different perspectives.
 ``` r
-# fit the vine copula model to observation data with *rvinecopulib* package.
-library(rvinecopulib)
-copula_example <- vine(df_example, copula_controls = list(family_set = "parametric"), margins_controls = list(mult = 1))
+mtr_dependency <- calc_dependency(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    pairs_matrix = NULL,
+    percentile = 95,
+    sim_nr = 100
+    )
+```
 
-# perform simulations
-B = 10
-sim_data <- as.data.frame(rvine(copula_example$nobs*B, copula_example))
-sim_data$simulation_nr <- rep(1:B, each = copula_example$nobs)
-
-# calculate the overlap of 95th percentile contour
-overlap <- get_overlap(sim_data = sim_data, obs_data = df_example, variables = NULL, percentile = 95, B = 10, summarize = FALSE)
+### Generate donutVPC
+Donut visual predictive check plot(donutVPC) can be calculated with donutVPC() functions.
+DonutVPC can help visualize the 90% prediction interval of 5th, 50th and 95th percentile density contour.
+``` r
+donutVPC(
+    sim_data = pediatric_sim,
+    obs_data = pediatric_3cov,
+    percentiles = c(10, 50, 90),
+    sim_nr = 100,
+    pairs_matrix = ,
+    conf_band = 95,
+    colors_bands = c("#99E0DC", "#E498B4")
+    )
 ```
 
 ## Citation
