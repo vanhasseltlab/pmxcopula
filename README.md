@@ -65,7 +65,7 @@ mtr_margin <- calc_margin(
 
 ```
 
-### Calculate the dependency metrics
+### Calculate dependency metrics
 Pearson correlations and overlap metrics can be calculated with calc_dependency() functions.
 Overlap metrics is calculated based on specific density contours (e.g. 95th percentile density contours) of the real-world and virtualp populaions:  for each pair combination of covariates, 95th percentile density contours were calculated for observed and simulated populations. The overlap metric was computed as the Jaccard index: the ratio between the intersection area and union area. Higher overlap indicated a better description of dependence relations.
 
@@ -80,7 +80,7 @@ mtr_dependency <- calc_dependency(
     )
 ```
 
-### Generate donutVPC
+### Generate donutVPCs
 Donut visual predictive check plot(donutVPC) can be calculated with donutVPC() functions.
 DonutVPC can help visualize the 90% prediction interval of 5th, 50th and 95th percentile density contour.
 ``` r
@@ -96,8 +96,8 @@ donutVPC(
 ```
 
 ## References
-1. [Czado C, Nagler T (2022) Vine Copula Based Modeling. Annual Review of Statistics and Its Application 9:453–477.] https://doi.org/10.1146/annurev-statistics-040220-101153
-2. [Zwep LB, Guo T, Nagler T, et al (2024) Virtual Patient Simulation Using Copula Modeling. Clinical Pharmacology & Therapeutics 115:795–804.]  https://doi.org/10.1002/cpt.3099
+1. Czado C, Nagler T (2022) Vine Copula Based Modeling. Annual Review of Statistics and Its Application 9:453–477. https://doi.org/10.1146/annurev-statistics-040220-101153
+2. Zwep LB, Guo T, Nagler T, et al (2024) Virtual Patient Simulation Using Copula Modeling. Clinical Pharmacology & Therapeutics 115:795–804.  https://doi.org/10.1002/cpt.3099
 
 
 ## Authors
