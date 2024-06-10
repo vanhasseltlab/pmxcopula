@@ -38,7 +38,7 @@ get_donutVPC <- function(sim_data,
   # generate obs_contours
   obs_contours <- NULL
   for (p in 1:nrow(pairs_matrix)) {
-    kd_obs <- ks::kde(obs_data |> dplyr::select(pairs_matrix[p, ]), compute.cont = TRUE)
+    kd_obs <- ks::kde(obs_data |> dplyr::select(pairs_matrix[p, ]) |> na.omit(), compute.cont = TRUE)
     contour_obs <- with(kd_obs, contourLines(x = eval.points[[1]], y = eval.points[[2]],
                                              z = estimate, levels = cont[paste0(100-percentiles,"%")]))
     obs_contours <- rbind.data.frame(obs_contours, extract_contour_df(contour_obs, kd_obs$cont, 0, pairs_matrix[p, ]))
