@@ -28,7 +28,7 @@ get_donutVPC <- function(sim_data,
 
   # check if the pairs_matrix is valid
   if (is.null(pairs_matrix)) {
-    pairs_matrix <- t(combn(colnames(obs_data), 2))
+    pairs_matrix <- t(combinat::combn(colnames(obs_data), 2))
   }
 
   if (!all(pairs_matrix %in% colnames(obs_data))) {

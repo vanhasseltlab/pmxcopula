@@ -45,7 +45,7 @@ get_qqplot <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = 
 
       ## calculation for observation quantiles ----
       obs_subset <- obs_data[[var[c]]]
-      observed_quantiles <- quantile(as.vector(obs_subset), probs = quant)
+      observed_quantiles <- quantile(as.vector(obs_subset), probs = quant, na.rm = TRUE)
       quant_obs <- cbind(as.data.frame(observed_quantiles), quant = quant)
 
       ## calculation for simulation ----
@@ -58,7 +58,7 @@ get_qqplot <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = 
             #### extract the ith simulation run ----
             marginal_data <- sim_subset |>
               dplyr::filter(simulation_nr == i)
-            simulation_quantiles <- quantile(marginal_data[, var[c]], probs = quant)
+            simulation_quantiles <- quantile(marginal_data[, var[c]], probs = quant, na.rm = TRUE)
             quant_sim <- cbind(as.data.frame(simulation_quantiles), quant = quant, simulation_nr = i)
             quant_sims[[i]] <- quant_sim
           }
@@ -68,8 +68,8 @@ get_qqplot <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = 
           sum_quant <- combi_quant |>
             dplyr::group_by(quant) |>
             dplyr::summarize(median_q = median(simulation_quantiles),
-                      lower_q = quantile(simulation_quantiles, probs = a),
-                      upper_q = quantile(simulation_quantiles, probs = b))
+                      lower_q = quantile(simulation_quantiles, probs = a, na.rm = TRUE),
+                      upper_q = quantile(simulation_quantiles, probs = b, na.rm = TRUE))
 
       ## plotting ----
       plot_dat <- merge(sum_quant, quant_obs, by = "quant")

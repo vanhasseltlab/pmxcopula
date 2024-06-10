@@ -45,7 +45,8 @@ mrg_metrics <- function(data, var = NULL) {
 #' @param var A character vector containing the variables of interest for calculating
 #' marginal metrics. If set to NULL, every covariate is included.
 #' @param aim_statistic A character vector containing the marginal metrics of interest.
-#' Available options include "mean", "median", "sd", "min", "max", "Q5.5%", and "Q95.95%".
+#' Available options include "mean", "median", "sd", "min", "max", "Q5.5\\%" and "Q95.95\\%",
+#' representing mean, median, standard deviation, 5th quantile and 95th quantile, respectively.
 #' If set to NULL, all marginal metrics are included.
 #'
 #' @return A data.frame containing the marginal metrics calculated for simulation data and observed data,
