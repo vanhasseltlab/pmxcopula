@@ -1,7 +1,7 @@
 #' Plot Univariate Density Curves From Simulation Data And Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables. sim_data
+#' to observations and columns correspond to variables. sim_data
 #' is supposed to include a column named "simulation_nr" as an identifier
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
@@ -9,7 +9,7 @@
 #' @param sim_nr An integer indicating the number of simulations.
 #' @param var A character vector containing multiple characters. The
 #' vector represents the variables of interest for generating qqplots. If
-#' set to NULL, every covariate is included.
+#' set to NULL, every variable is included.
 #' @param pick_color A vector with two strings specifying the colors to represent the
 #' simulaion and observation datasets.
 #'
@@ -33,7 +33,7 @@ plot_1dist <- function(sim_data, obs_data, sim_nr = NULL, var = NULL, pick_color
     var <- colnames(obs_data)
   } else if (!all( var %in% colnames(obs_data))) {
     #check for names not matching between obs_data and var
-    stop("Covariate names in var differ from names in obs_data")
+    stop("Variable names in var differ from names in obs_data")
   }
 
   # filter out the non-numeric varibales in dataframe

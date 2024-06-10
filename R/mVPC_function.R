@@ -3,14 +3,14 @@
 #' The multivariate visual predictive check plot (mVPC) combines donutVPCs with qqplots.
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables. sim_data
+#' to observations and columns correspond to variables. sim_data
 #' is supposed to include a column named "simulation_nr" as an identifier
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
 #' to observations and columns correspond to variables.
 #' @param var A character vector containing multiple characters. The
 #' vector represents the variables of interest for generating qqplots. If
-#' set to NULL, every covariate is included.
+#' set to NULL, every variable is included.
 #' @param sim_nr An integer indicating the number of simulations.
 #' @param title Title of the figure.
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
@@ -49,7 +49,7 @@ mVPC <- function(sim_data,
     var <- colnames(obs_data)
   } else if (!all( var %in% colnames(obs_data))) {
     #check for names not matching between obs_data and var
-    stop("Covariate names in var differ from names in obs_data")
+    stop("Variable names in var differ from names in obs_data")
   }
 
   # determine the variable pairs of interest ----

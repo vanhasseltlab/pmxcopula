@@ -3,7 +3,7 @@
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond to observations and columns correspond to variables.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond to observations and columns correspond to variables.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
-#' covariate names. If set to NULL, every possible covariate
+#' variable names. If set to NULL, every possible variable
 #' pair is included.
 #' @param percentile A numeric value representing the
 #' percentile of the density contour for each pair combination of variables;
@@ -36,7 +36,7 @@ calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, si
 
 
   pair_data <- pairs_matrix |> as.data.frame() |>
-    dplyr::mutate(No = c(1:nrow(pairs_matrix)), # No serves as the indicator of covariate pair
+    dplyr::mutate(No = c(1:nrow(pairs_matrix)), # No serves as the indicator of variable pair
                   var_pair = paste0(V1, "-", V2))
   ovlp_data <- pair_data |>
     dplyr::slice(rep(dplyr::row_number(), sim_nr)) |>
@@ -120,13 +120,13 @@ calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, si
 #' Compare Dependency Metric Between Simulation Data And Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables. sim_data
+#' to observations and columns correspond to variables. sim_data
 #' is supposed to include a column named "simulation_nr" as an identifier
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
-#' to observations and columns correspond to covariates.
+#' to observations and columns correspond to variables.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
-#' covariate names. If set to NULL, every possible covariate
+#' variable names. If set to NULL, every possible variable
 #' pair is included.
 #' @param percentile A numeric value representing the
 #' percentile of the density contour for each pair combination of variables;

@@ -1,7 +1,7 @@
 #' Create qqplots From Simulation Data And Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables. sim_data
+#' to observations and columns correspond to variables. sim_data
 #' is supposed to include a column named "simulation_nr" as an identifier
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
@@ -10,7 +10,7 @@
 #' @param conf_band A numeric value indicating the empirical confidence level
 #' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param var A character vector containing the variables of interest for generating qqplots. If
-#' set to NULL, every covariate is included.
+#' set to NULL, every variable is included.
 #' @param type A character of plotting types. Either "ribbon" or"point".
 #' "ribbon" corresponds to visualizing the confidence level defined in "conf_band" as shaded area,
 #' and "point" corresponds to visualizing all the simulation quantiles as individual points.
@@ -24,7 +24,7 @@ get_qqplot <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = 
     var <- colnames(obs_data)
   } else if (!all( var %in% colnames(obs_data))) {
     #check for names not matching between obs_data and var
-    stop("Covariate names in var differ from names in obs_data")
+    stop("Variable names in var differ from names in obs_data")
   }
 
   # check if the simulation_nr exists in sim_data
@@ -115,7 +115,7 @@ get_qqplot <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = 
 #' Output qqplots From Simulation Data And Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables. sim_data
+#' to observations and columns correspond to variables. sim_data
 #' is supposed to include a column named "simulation_nr" as an identifier
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
@@ -125,7 +125,7 @@ get_qqplot <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = 
 #' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param var A character vector containing multiple characters. The
 #' vector represents the variables of interest for generating qqplots. If
-#' set to NULL, every covariate is included.
+#' set to NULL, every variable is included.
 #' @param type A character of plotting types. Either "ribbon" or"point".
 #' "ribbon" corresponds to visualizing the confidence level defined in "conf_band" as shaded area,
 #' and "point" corresponds to visualizing all simulation quantiles as individual points.
@@ -151,7 +151,7 @@ plot_qq <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = NUL
     var <- colnames(obs_data)
   } else if (!all( var %in% colnames(obs_data))) {
     #check for names not matching between obs_data and var
-    stop("Covariate names in var differ from names in obs_data")
+    stop("Variable names in var differ from names in obs_data")
   }
 
   # filter out the non-numeric varibales in dataframe

@@ -1,8 +1,8 @@
 #' Calculate Correlations
 #'
-#' @param data A data.frame with rows corresponding to observations and columns corresponding to covariates.
+#' @param data A data.frame with rows corresponding to observations and columns corresponding to variables.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
-#' covariate names. If set to NULL, every possible covariate
+#' variable names. If set to NULL, every possible variable
 #' pair is included.
 #'
 #' @return A data.frame containing the correlation calculated for the dataset.

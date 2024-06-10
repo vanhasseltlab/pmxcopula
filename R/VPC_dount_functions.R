@@ -11,10 +11,10 @@
 #' @param contour_levels A numeric vector with density levels at which the
 #' percentiles are calculated.
 #' @param sim_nr An integer identifying the simulation for which contours are calculated.
-#' @param pair A vector with two strings indicating the names of the covariates.
+#' @param pair A vector with two strings indicating the names of the variables.
 #'
 #' @return A data.frame containing the coordinates of contours, percentiles, density levels,
-#' covariate pairs and simulation identifiers.
+#' variable pairs and simulation identifiers.
 #' @noRd
 
 extract_contour_df <- function(contour_list, contour_levels, sim_nr = NULL, pair = NULL) {
@@ -41,7 +41,7 @@ extract_contour_df <- function(contour_list, contour_levels, sim_nr = NULL, pair
 #'
 #'
 #' @param ci_data Output from extract_contour_df function, containing the
-#' coordinates of contours, percentiles, density levels, covariate pairs and
+#' coordinates of contours, percentiles, density levels, variable pairs and
 #' simulation identifiers.
 #'
 #' @return A sf polygon object with the polygon(s) of a contour.
@@ -95,7 +95,7 @@ create_polygon <- function(ci_data) {
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
 #' @param sim_nr An integer identifying the simulation for which contours are calculated.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
-#' covariate names from the copula. If set to NULL, every possible covariate
+#' variable names from the copula. If set to NULL, every possible variable
 #' pair is included.
 #'
 #' @return A data.frame containing contours over all percentiles from the
@@ -103,12 +103,12 @@ create_polygon <- function(ci_data) {
 #' @noRd
 simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL) {
 
-  # check if the covariate names exist in sim_data
+  # check if the variable names exist in sim_data
   if (is.null(pairs_matrix)) {
     var <- setdiff(colnames(sim_data), "simulation_nr")
     pairs_matrix <- t(combinat::combn(var, 2))
   } else if (!all(c(pairs_matrix) %in% colnames(sim_data))) {
-    stop("Covariate names in pairs_matrix differ from names in sim_data")
+    stop("Variable names in pairs_matrix differ from names in sim_data")
   }
 
   # check if the simulation_nr exists in sim_data
@@ -116,7 +116,7 @@ simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL
     stop("simulation_nr does not exist in sim_data")
   }
 
-  # calculate contours for every percentile and every covariate combination
+  # calculate contours for every percentile and every variable pair combination
   sim_contours_list <- list()
   i <- 1
   for (b in 1 : sim_nr) {
@@ -277,7 +277,7 @@ ggVPC_donut <- function(geom_vpc, obs_data, pairs_data = NULL) {
     obs_contours <- obs_data
   } else {
     stop("The obs_data does not seem to be a observed contour, or does not ",
-         "contain the same names as the covariate names in pairs data or ",
+         "contain the same names as the variable names in pairs data or ",
          "the geom_vpc object.")
   }
 
@@ -312,7 +312,7 @@ ggVPC_donut <- function(geom_vpc, obs_data, pairs_data = NULL) {
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
 #' @param B An integer indicating the number of simulations.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
-#' covariate names from the copula. If set to NULL, every possible covariate
+#' variable names from the copula. If set to NULL, every possible variable
 #' pair is included.
 #' @param conf_band A numeric value indicating the empirical confidence level for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
@@ -327,7 +327,7 @@ extract_geom_donutVPC <- function(sim_data,
   sim_contours_list <- list()
 
   # if (is.null(vine$names)) {
-  #   vine$names <- paste0("V", 1:vine$copula$structure$d) #  rename covariate names into e.g. "V1", "V2" and "V3"
+  #   vine$names <- paste0("V", 1:vine$copula$structure$d) #  rename variable names into e.g. "V1", "V2" and "V3"
   # }
 
   # if (!"simulation_nr") {
@@ -347,14 +347,14 @@ extract_geom_donutVPC <- function(sim_data,
     pairs_matrix <- t(combinat::combn(var, 2))
   } else if (!all(c(pairs_matrix) %in% var)) {
     #check for names not matching between vine and pairs_matrix
-    stop("Covariate names in pairs_matrix differ from names in vine")
+    stop("Variable names in pairs_matrix differ from names in vine")
   }
 
   #simulate from vine
   # full_sim_data <- as.data.frame(rvine(vine$nobs*B, vine))
   # full_sim_data$b <- rep(1:B, each = vine$nobs) # add label for each run of simulation
 
-  #calculate contours for every percentile and every covariate combination
+  #calculate contours for every percentile and every variable pair combination
   i <- 1
   for (b in 1:B) {
     cat("\r", "Calculate contours of simulation:", b, "/", B)

@@ -5,7 +5,7 @@
 #' @param obs_data A data.frame containing observation dataset.
 #' @param variables A character vector containing multiple characters. The
 #' vector represents the variables of interest for plotting.
-#' If set to NULL, every covariate is included.
+#' If set to NULL, every variable is included.
 #' @param sim_nr An integer indicating the simulation data to use. If there are
 #' multiple simulations or a column named "simulation_nr" in the simulation
 #' dataset, select one specific simulation to visualize the distribution; if such column does not exist,

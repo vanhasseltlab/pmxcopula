@@ -1,8 +1,8 @@
 #' Calculate Marginal Metrics
 #'
-#' @param data A data.frame with rows corresponding to observations and columns corresponding to covariates.
+#' @param data A data.frame with rows corresponding to observations and columns corresponding to variables.
 #' @param var A character vector containing the variables of interest for calculating
-#' marginal metrics. If set to NULL, every covariate is included.
+#' marginal metrics. If set to NULL, every variable is included.
 #'
 #' @return A data.frame containing the marginal metrics calculated for the dataset.
 #' @noRd
@@ -27,7 +27,7 @@ mrg_metrics <- function(data, var = NULL) {
 
   long_format <- univariate |>
     tibble::rownames_to_column("statistic") |>
-    tidyr::pivot_longer(-statistic, names_to = "covariate")
+    tidyr::pivot_longer(-statistic, names_to = "variable")
 
   return(long_format)
 }
@@ -36,14 +36,14 @@ mrg_metrics <- function(data, var = NULL) {
 #' Compare Marginal Metrics Between Simulation Data and Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables. sim_data
+#' to observations and columns correspond to variables. sim_data
 #' is supposed to include a column named "simulation_nr" as an identifier
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
-#' to observations and columns correspond to covariates.
+#' to observations and columns correspond to variables.
 #' @param sim_nr An integer indicating the number of simulations.
 #' @param var A character vector containing the variables of interest for calculating
-#' marginal metrics. If set to NULL, every covariate is included.
+#' marginal metrics. If set to NULL, every variable is included.
 #' @param aim_statistic A character vector containing the marginal metrics of interest.
 #' Available options include "mean", "median", "sd", "min", "max", "Q5.5\%" and "Q95.95\%",
 #' representing mean, median, standard deviation, 5th quantile and 95th quantile, respectively.
@@ -77,12 +77,12 @@ calc_margin <- function(sim_data,
   # n_statistics <- length(var)*7  + 2*choose(length(var), 2)
   n_statistics <- length(var)*7
   full_results <- as.data.frame(matrix(nrow = sim_nr * n_statistics, ncol = 3))
-  names(full_results) <- c("statistic", "covariate", "value")
+  names(full_results) <- c("statistic", "variable", "value")
   full_results$simulation_nr <- rep(1 : sim_nr, each = n_statistics)
 
   for(i in unique(sim_data$simulation_nr)) {
     sim_results <- mrg_metrics(sim_data[sim_data$simulation_nr == i, ], var = var)
-    full_results[full_results$simulation_nr == i, c("statistic", "covariate", "value")] <- sim_results
+    full_results[full_results$simulation_nr == i, c("statistic", "variable", "value")] <- sim_results
   }
 
   full_results_compare <- full_results |>

@@ -5,7 +5,7 @@
 #' @param sim_nr An integer indicating the number of simulations.
 #'
 #' @return A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables. sim_data includes
+#' to observations and columns correspond to variables. sim_data includes
 #' a column named "simulation_nr" as an identifier.
 #' @export
 #'
@@ -39,7 +39,7 @@ rcopula <- function(copula = copula,
 #' @param var_types A vector of variable types, a length d vector; e.g., c("c", "c") for two continuous variables, or c("c", "d") for first variable continuous and second discrete.
 #'
 #' @return  A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables.
+#' to observations and columns correspond to variables.
 #' @export
 #'
 #' @examples
@@ -77,20 +77,20 @@ rscopula <- function(copula = copula,
   # check if xmin is valid
   if(!is.null(xmin)) {
     if (length(xmin) != length(var_c)) {
-      stop("The length of 'xmin' does not match the number of continuous covariates.")
+      stop("The length of 'xmin' does not match the number of continuous variables.")
     }
   }
   # check if xmax is valid
   if(!is.null(xmax)){
     if (length(xmax) != length(var_c)) {
-      stop("The length of 'xmax' does not match the number of continuous covariates.")
+      stop("The length of 'xmax' does not match the number of continuous variables.")
     }
   }
 
   # check if category is valid
   if(!is.null(category)) {
     if (length(category) != length(var_d)) {
-      stop("The length of 'category' does not match the number of discrete covariates.")
+      stop("The length of 'category' does not match the number of discrete variables.")
     }
   }
 

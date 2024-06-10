@@ -1,7 +1,7 @@
 #' Create donutVPCs From Simulation Data And Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables. sim_data
+#' to observations and columns correspond to variable variables. sim_data
 #' is supposed to include a column named "simulation_nr" as an identifier
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
@@ -10,9 +10,9 @@
 #' percentiles of the density distribution that appear in the VPC donut plot;
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
 #' @param sim_nr An integer indicating the number of simulations.
-#' @param pairs_matrix Matrix with 2 column and each row containing a pair of
-#' covariate names. If set to NULL, every possible covariate
-#' pair is included.
+#' @param pairs_matrix Matrix with 2 column and each row containing a pair combination of
+#' variable names. If set to NULL, every possible variable
+#' pair combination is included.
 #' @param conf_band A numeric value indicating the empirical confidence level
 #' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
@@ -32,7 +32,7 @@ get_donutVPC <- function(sim_data,
   }
 
   if (!all(pairs_matrix %in% colnames(obs_data))) {
-    stop("Covariate names in pairs do not exist in obs_data.")
+    stop("variable names in pairs_matrix do not exist in obs_data.")
   }
 
   # generate obs_contours
@@ -55,7 +55,7 @@ get_donutVPC <- function(sim_data,
                                           conf_band = conf_band,
                                           colors_bands = colors_bands)
 
-  # plot dountVPC(s) for every covariate pair
+  # plot dountVPC(s) for every variable pair
   plot_list <- list()
   for (i in 1:nrow(pairs_matrix)) {
     var_pair <- paste0(pairs_matrix[i, 1], "-", pairs_matrix[i, 2])
@@ -78,7 +78,7 @@ get_donutVPC <- function(sim_data,
 #' Output donutVPCs From Simulation Data And Observed Data
 #'
 #' @param sim_data A data.frame containing simulation dataset. Rows correspond
-#' to observations and columns correspond to covariate variables. sim_data
+#' to observations and columns correspond to variables. sim_data
 #' is supposed to include a column named "simulation_nr" as an identifier
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
@@ -88,22 +88,23 @@ get_donutVPC <- function(sim_data,
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
 #' @param sim_nr An integer indicating the number of simulations.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
-#' covariate names. If set to NULL, every possible covariate
+#' variable names. If set to NULL, every possible variable
 #' pair is included.
 #' @param conf_band A numeric value indicating the empirical confidence level
 #' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
 #'
-#' @return A patchwork object of donutVPC for covariate pairs.
+#' @return A patchwork object of donutVPC for variable pairs.
 #' @export
 #'
 #' @examples
+#' # plot the donut VPC for the variable pairs CREA-AGE and CREA-BW
 #' plot <- donutVPC(
 #'     sim_data = pediatric_sim,
 #'     obs_data = pediatric_3cov,
 #'     percentiles = c(10, 50, 90),
 #'     sim_nr = 100,
-#'     pairs_matrix = NULL,
+#'     pairs_matrix = matrix(c("CREA","CREA", "AGE", "BW"),2,2),
 #'     conf_band = 95,
 #'     colors_bands = c("#99E0DC", "#E498B4")
 #'     )
