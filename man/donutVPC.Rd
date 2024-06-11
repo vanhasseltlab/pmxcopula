@@ -16,7 +16,7 @@ donutVPC(
 }
 \arguments{
 \item{sim_data}{A data.frame containing simulation dataset. Rows correspond
-to observations and columns correspond to covariate variables. sim_data
+to observations and columns correspond to variables. sim_data
 is supposed to include a column named "simulation_nr" as an identifier
 of each simulation run.}
 
@@ -30,7 +30,7 @@ e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.}
 \item{sim_nr}{An integer indicating the number of simulations.}
 
 \item{pairs_matrix}{Matrix with 2 column and each row containing a pair of
-covariate names. If set to NULL, every possible covariate
+variable names. If set to NULL, every possible variable
 pair is included.}
 
 \item{conf_band}{A numeric value indicating the empirical confidence level
@@ -39,18 +39,19 @@ for the width of the bands; e.g., 95 indicates 95\% confidence interval.}
 \item{colors_bands}{A vector with two strings specifying the colors of the confidence bands.}
 }
 \value{
-A patchwork object of donutVPC for covariate pairs.
+A patchwork object of donutVPC for variable pairs.
 }
 \description{
 Output donutVPCs From Simulation Data And Observed Data
 }
 \examples{
+# plot the donut VPC for the variable pairs CREA-AGE and CREA-BW
 plot <- donutVPC(
     sim_data = pediatric_sim,
     obs_data = pediatric_3cov,
     percentiles = c(10, 50, 90),
     sim_nr = 100,
-    pairs_matrix = NULL,
+    pairs_matrix = matrix(c("CREA","CREA", "AGE", "BW"),2,2),
     conf_band = 95,
     colors_bands = c("#99E0DC", "#E498B4")
     )
