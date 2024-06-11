@@ -16,7 +16,7 @@ plot_qq(
 }
 \arguments{
 \item{sim_data}{A data.frame containing simulation dataset. Rows correspond
-to observations and columns correspond to covariate variables. sim_data
+to observations and columns correspond to variables. sim_data
 is supposed to include a column named "simulation_nr" as an identifier
 of each simulation run.}
 
@@ -30,7 +30,7 @@ for the width of the bands; e.g., 95 indicates 95\% confidence interval.}
 
 \item{var}{A character vector containing multiple characters. The
 vector represents the variables of interest for generating qqplots. If
-set to NULL, every covariate is included.}
+set to NULL, every variable is included.}
 
 \item{type}{A character of plotting types. Either "ribbon" or"point".
 "ribbon" corresponds to visualizing the confidence level defined in "conf_band" as shaded area,

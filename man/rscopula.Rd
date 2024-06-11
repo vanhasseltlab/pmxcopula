@@ -29,7 +29,7 @@ package.}
 }
 \value{
 A data.frame containing simulation dataset. Rows correspond
-to observations and columns correspond to covariate variables.
+to observations and columns correspond to variables.
 }
 \description{
 Simulate Subset Virtual Population

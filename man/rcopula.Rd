@@ -14,7 +14,7 @@ package.}
 }
 \value{
 A data.frame containing simulation dataset. Rows correspond
-to observations and columns correspond to covariate variables. sim_data includes
+to observations and columns correspond to variables. sim_data includes
 a column named "simulation_nr" as an identifier.
 }
 \description{

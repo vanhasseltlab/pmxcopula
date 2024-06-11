@@ -14,7 +14,7 @@ plot_1dist(
 }
 \arguments{
 \item{sim_data}{A data.frame containing simulation dataset. Rows correspond
-to observations and columns correspond to covariate variables. sim_data
+to observations and columns correspond to variables. sim_data
 is supposed to include a column named "simulation_nr" as an identifier
 of each simulation run.}
 
@@ -25,7 +25,7 @@ to observations and columns correspond to variables.}
 
 \item{var}{A character vector containing multiple characters. The
 vector represents the variables of interest for generating qqplots. If
-set to NULL, every covariate is included.}
+set to NULL, every variable is included.}
 
 \item{pick_color}{A vector with two strings specifying the colors to represent the
 simulaion and observation datasets.}

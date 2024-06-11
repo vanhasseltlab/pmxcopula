@@ -19,7 +19,7 @@ calc_overlap(
 \item{obs_data}{A data.frame containing observation dataset. Rows correspond to observations and columns correspond to variables.}
 
 \item{pairs_matrix}{Matrix with 2 column and each row containing a pair of
-covariate names. If set to NULL, every possible covariate
+variable names. If set to NULL, every possible variable
 pair is included.}
 
 \item{percentile}{A numeric value representing the

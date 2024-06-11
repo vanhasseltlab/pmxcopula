@@ -8,15 +8,15 @@ calc_dependency(sim_data, obs_data, pairs_matrix = NULL, percentile, sim_nr)
 }
 \arguments{
 \item{sim_data}{A data.frame containing simulation dataset. Rows correspond
-to observations and columns correspond to covariate variables. sim_data
+to observations and columns correspond to variables. sim_data
 is supposed to include a column named "simulation_nr" as an identifier
 of each simulation run.}
 
 \item{obs_data}{A data.frame containing observation dataset. Rows correspond
-to observations and columns correspond to covariates.}
+to observations and columns correspond to variables.}
 
 \item{pairs_matrix}{Matrix with 2 column and each row containing a pair of
-covariate names. If set to NULL, every possible covariate
+variable names. If set to NULL, every possible variable
 pair is included.}
 
 \item{percentile}{A numeric value representing the

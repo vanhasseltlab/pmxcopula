@@ -23,7 +23,7 @@ plot_mvdist(
 
 \item{variables}{A character vector containing multiple characters. The
 vector represents the variables of interest for plotting.
-If set to NULL, every covariate is included.}
+If set to NULL, every variable is included.}
 
 \item{sim_nr}{An integer indicating the simulation data to use. If there are
 multiple simulations or a column named "simulation_nr" in the simulation

@@ -14,17 +14,17 @@ calc_margin(
 }
 \arguments{
 \item{sim_data}{A data.frame containing simulation dataset. Rows correspond
-to observations and columns correspond to covariate variables. sim_data
+to observations and columns correspond to variables. sim_data
 is supposed to include a column named "simulation_nr" as an identifier
 of each simulation run.}
 
 \item{obs_data}{A data.frame containing observation dataset. Rows correspond
-to observations and columns correspond to covariates.}
+to observations and columns correspond to variables.}
 
 \item{sim_nr}{An integer indicating the number of simulations.}
 
 \item{var}{A character vector containing the variables of interest for calculating
-marginal metrics. If set to NULL, every covariate is included.}
+marginal metrics. If set to NULL, every variable is included.}
 
 \item{aim_statistic}{A character vector containing the marginal metrics of interest.
 Available options include "mean", "median", "sd", "min", "max", "Q5.5\%" and "Q95.95\%",
