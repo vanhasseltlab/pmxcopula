@@ -80,9 +80,7 @@ mVPC <- function(sim_data,
   diag(layout_mat) <- nr_cross_plots + (1 : n)
   list_plots <- c(donutVPCs, qqplots)
 
-  mVPC <- gridExtra::grid.arrange(grobs = list_plots, layout_matrix = layout_mat, top = title, bottom = caption)
-
-  return(mVPC)
+  gridExtra::grid.arrange(grobs = list_plots, layout_matrix = layout_mat, top = title, bottom = caption)
 }
 
 
