@@ -2,7 +2,8 @@
 #'
 #' @param copula An object of class "vine_dist" or "vine", from rvinecopulib
 #' package.
-#' @param sim_nr An integer indicating the number of simulations.
+#' @param sim_nr An integer indicating the number of simulations. Each simulation
+#' generates the same number of individuals as the observation dataset.
 #'
 #' @return A data.frame containing simulation dataset. Rows correspond
 #' to observations and columns correspond to variables. sim_data includes

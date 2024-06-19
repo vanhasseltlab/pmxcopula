@@ -9,7 +9,8 @@
 #' @param percentiles (A vector of) Numeric value(s) representing the
 #' percentiles of the density distribution that appear in the VPC donut plot;
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
-#' @param sim_nr An integer indicating the number of simulations.
+#' @param sim_nr An integer indicating the number of simulations. Each simulation
+#' generates the same number of individuals as the observation dataset.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair combination of
 #' variable names. If set to NULL, every possible variable
 #' pair combination is included.
@@ -86,7 +87,8 @@ get_donutVPC <- function(sim_data,
 #' @param percentiles  (A vector of) Numeric value(s) representing the
 #' percentiles of the density distribution that appear in the VPC donut plot;
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
-#' @param sim_nr An integer indicating the number of simulations.
+#' @param sim_nr An integer indicating the number of simulations. Each simulation
+#' generates the same number of individuals as the observation dataset.
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
 #' variable names. If set to NULL, every possible variable
 #' pair is included.

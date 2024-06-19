@@ -41,7 +41,8 @@ mrg_metrics <- function(data, var = NULL) {
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
 #' to observations and columns correspond to variables.
-#' @param sim_nr An integer indicating the number of simulations.
+#' @param sim_nr An integer indicating the number of simulations. Each simulation
+#' generates the same number of individuals as the observation dataset.
 #' @param var A character vector containing the variables of interest for calculating
 #' marginal metrics. If set to NULL, every variable is included.
 #' @param aim_statistic A character vector containing the marginal metrics of interest.

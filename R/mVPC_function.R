@@ -11,7 +11,8 @@
 #' @param var A character vector containing multiple characters. The
 #' vector represents the variables of interest for generating qqplots. If
 #' set to NULL, every variable is included.
-#' @param sim_nr An integer indicating the number of simulations.
+#'#' @param sim_nr An integer indicating the number of simulations. Each simulation
+#' generates the same number of individuals as the observation dataset.
 #' @param title Title of the figure.
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
 #' @param caption A logical value to indicate define the size of caption.

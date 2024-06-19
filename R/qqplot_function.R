@@ -6,7 +6,8 @@
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
 #' to observations and columns correspond to variables.
-#' @param sim_nr An integer indicating the number of simulations.
+#' @param sim_nr An integer indicating the number of simulations. Each simulation
+#' generates the same number of individuals as the observation dataset.
 #' @param conf_band A numeric value indicating the empirical confidence level
 #' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param var A character vector containing the variables of interest for generating qqplots. If
@@ -120,7 +121,8 @@ get_qqplot <- function(sim_data, obs_data, sim_nr = NULL, conf_band = 95, var = 
 #' of each simulation run.
 #' @param obs_data A data.frame containing observation dataset. Rows correspond
 #' to observations and columns correspond to variables.
-#' @param sim_nr An integer indicating the number of simulations.
+#' @param sim_nr An integer indicating the number of simulations. Each simulation
+#' generates the same number of individuals as the observation dataset.
 #' @param conf_band A numeric value indicating the empirical confidence level
 #' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param var A character vector containing multiple characters. The
