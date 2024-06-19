@@ -6,7 +6,7 @@
 #' @param variables A character vector containing multiple characters. The
 #' vector represents the variables of interest for plotting.
 #' If set to NULL, every variable is included.
-#' @param which_sim An integer indicating the simulation data to use. One simulation
+#' @param sim_nr An integer indicating the simulation data to use. One simulation
 #' generates the same number of individuals as the observation dataset. If there are
 #' multiple simulations or a column named "simulation_nr" in the simulation
 #' dataset, select one specific simulation to visualize the distribution; if such column does not exist,
@@ -29,20 +29,20 @@
 #' plot <- plot_mvdist(
 #'     sim_data = pediatric_sim,
 #'     obs_data = pediatric_3cov,
-#'     which_sim = 1,
+#'     sim_nr = 1,
 #'     pick_color = c("#3ABAC1","#969696"),
 #'     plot_type = "density"
 #'     )
 #'
 plot_mvdist <- function(sim_data, obs_data, variables = NULL,
-                                      which_sim = 1, title = NULL, plot_type = "points",
+                                      sim_nr = 1, title = NULL, plot_type = "points",
                                       pick_color = c("#3ABAC1","#969696"), full_plot = TRUE,
                                       caption = NULL) {
 
   if ("simulation_nr" %in% colnames(sim_data)) {
     # Use only 1 simulation for plotting
     sim_data <- sim_data |>
-      dplyr::filter(simulation_nr %in% which_sim) |>
+      dplyr::filter(simulation_nr %in% sim_nr) |>
       dplyr::select(-simulation_nr)
   }
 
