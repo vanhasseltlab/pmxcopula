@@ -35,9 +35,10 @@
 #'     )
 #'
 plot_mvdist <- function(sim_data, obs_data, variables = NULL,
-                                      sim_nr = 1, title = NULL, plot_type = "points",
-                                      pick_color = c("#3ABAC1","#969696"), full_plot = TRUE,
-                                      caption = NULL) {
+                        sim_nr = 1, title = NULL, plot_type = "points",
+                        pick_color = c("#3ABAC1","#969696"), full_plot = TRUE,
+                        caption = NULL,
+                        return_grob = FALSE) {
 
   if ("simulation_nr" %in% colnames(sim_data)) {
     # Use only 1 simulation for plotting
@@ -57,7 +58,6 @@ plot_mvdist <- function(sim_data, obs_data, variables = NULL,
   if (is.null(variables)) {
     variables <- setdiff(colnames(sim_data), "simulation_nr")
   }
-  #variables_str <- paste0("`", variables, "`")
 
   point_plots <- density_plots <- list()
   combination_variables <- t(combinat::combn(variables, 2))
@@ -133,6 +133,13 @@ plot_mvdist <- function(sim_data, obs_data, variables = NULL,
     list_plots <- c(density_plots, univariate_plots, point_plots)
   }
 
-  gridExtra::grid.arrange(grobs = list_plots, layout_matrix = layout_mat, top = title, bottom = caption)
+  # determine the output
+  if (return_grob != FALSE) {
+    gridExtra::grid.arrange(grobs = list_plots, layout_matrix = layout_mat, top = title, bottom = caption)
+  } else {
+    mvdist <- gridExtra::grid.arrange(grobs = list_plots, layout_matrix = layout_mat, top = title, bottom = caption)
+    return(mvdist)
+  }
+
 
 }

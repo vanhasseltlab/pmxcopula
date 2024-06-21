@@ -13,7 +13,8 @@ plot_mvdist(
   plot_type = "points",
   pick_color = c("#3ABAC1", "#969696"),
   full_plot = TRUE,
-  caption = NULL
+  caption = NULL,
+  return_grob = FALSE
 )
 }
 \arguments{
@@ -25,7 +26,8 @@ plot_mvdist(
 vector represents the variables of interest for plotting.
 If set to NULL, every variable is included.}
 
-\item{sim_nr}{An integer indicating the simulation data to use. If there are
+\item{sim_nr}{An integer indicating the simulation data to use. One simulation
+generates the same number of individuals as the observation dataset. If there are
 multiple simulations or a column named "simulation_nr" in the simulation
 dataset, select one specific simulation to visualize the distribution; if such column does not exist,
 the default value of 1 will be used to visualize the entire silumation dataset.}

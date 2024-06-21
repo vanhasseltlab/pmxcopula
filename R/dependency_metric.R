@@ -27,7 +27,7 @@
 #'     sim_nr = 100,
 #'     summarize = FALSE)
 #'
-calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, sim_nr, summarize = FALSE) {
+calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, sim_nr, summarize = FALSE, verbose = TRUE) {
 
   # V1 <- V2 <- No <- statistic <- var_pair <- ovlp <- Var1 <- Var2 <- Sim_N <- sd <- NULL
 
@@ -66,7 +66,12 @@ calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, si
   contour_sim_list <- list()
 
   for (b in 1 : sim_nr){
-    cat("\r", "Calculate overlap of simulation:", b, "/", sim_nr)
+
+    # message switch
+    if (verbose == TRUE) {
+      message("\r", "Calculate overlap of simulation:", b, "/", sim_nr)
+    }
+
     for (i in 1 : nrow(pair_data))
       {
       sdata <- sim_data[sim_data$simulation_nr == b,] |> dplyr::select(pair_data[i,1],pair_data[i,2]) |> na.omit()
@@ -149,9 +154,10 @@ calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, si
 #'     )
 #'
 calc_dependency <- function(sim_data, obs_data,
-                              pairs_matrix = NULL,
-                              percentile,
-                              sim_nr) {
+                            pairs_matrix = NULL,
+                            percentile,
+                            sim_nr,
+                            verbose = TRUE) {
   ovlp <- NULL
   if (is.null(pairs_matrix)) {
     pairs_matrix <- t(combinat::combn(colnames(obs_data), 2))
@@ -163,11 +169,16 @@ calc_dependency <- function(sim_data, obs_data,
                          percentile = percentile,
                          sim_nr = sim_nr,
                          pairs_matrix = pairs_matrix,
-                         summarize = FALSE) |>
+                         summarize = FALSE,
+                         verbose = verbose) |>
     dplyr::rename(value = ovlp) |>
     dplyr::mutate(observed = 1)
 
-  cat("\r", "Calculation of dependency metric completed.","\n")
+  # message switch
+  if (verbose == TRUE) {
+    message("\r", "Calculation of dependency metric completed.","\n")
+  }
+
 
   cor <- as.data.frame(matrix(nrow = sim_nr * nrow(pairs_matrix), ncol = 5))
   colnames(cor) <- c("statistic", "Var1", "Var2","var_pair", "cor")
@@ -188,7 +199,10 @@ calc_dependency <- function(sim_data, obs_data,
 
   cor_compare <- suppressMessages(dplyr::left_join(cor_compare,calc_correlation(obs_data, pairs_matrix = pairs_matrix) |> dplyr::rename(observed = cor)))
 
-  cat("\r", "Calculation of correlation completed.","\n")
+  # message switch
+  if (verbose == TRUE) {
+    message("\r", "Calculation of correlation completed.","\n")
+  }
 
   dependency <- rbind(cor_compare, overlap)
 

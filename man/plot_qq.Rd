@@ -23,7 +23,8 @@ of each simulation run.}
 \item{obs_data}{A data.frame containing observation dataset. Rows correspond
 to observations and columns correspond to variables.}
 
-\item{sim_nr}{An integer indicating the number of simulations.}
+\item{sim_nr}{An integer indicating the number of simulations. Each simulation
+generates the same number of individuals as the observation dataset.}
 
 \item{conf_band}{A numeric value indicating the empirical confidence level
 for the width of the bands; e.g., 95 indicates 95\% confidence interval.}

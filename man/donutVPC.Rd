@@ -11,7 +11,8 @@ donutVPC(
   sim_nr,
   pairs_matrix = NULL,
   conf_band = 95,
-  colors_bands = c("#99E0DC", "#E498B4")
+  colors_bands = c("#99E0DC", "#E498B4"),
+  verbose = TRUE
 )
 }
 \arguments{
@@ -27,7 +28,8 @@ to observations and columns correspond to variables.}
 percentiles of the density distribution that appear in the VPC donut plot;
 e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.}
 
-\item{sim_nr}{An integer indicating the number of simulations.}
+\item{sim_nr}{An integer indicating the number of simulations. Each simulation
+generates the same number of individuals as the observation dataset.}
 
 \item{pairs_matrix}{Matrix with 2 column and each row containing a pair of
 variable names. If set to NULL, every possible variable

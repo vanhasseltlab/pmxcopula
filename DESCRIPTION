@@ -12,14 +12,12 @@ Description: A comprehensive framework for copula model evaluation and virtual p
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
-Depends: 
-    R (>= 2.10)
 Suggests: 
     testthat (>= 3.5.0)
 Config/testthat/edition: 3
 Imports: 
     combinat,
-    dplyr,
+    dplyr, 
     ggplot2 (>= 3.3.0),
     gridExtra,
     ks,

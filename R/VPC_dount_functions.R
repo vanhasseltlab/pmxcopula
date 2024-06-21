@@ -101,7 +101,7 @@ create_polygon <- function(ci_data) {
 #' @return A data.frame containing contours over all percentiles from the
 #' different simulations .
 #' @noRd
-simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL) {
+simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL, verbose = TRUE) {
 
   # check if the variable names exist in sim_data
   if (is.null(pairs_matrix)) {
@@ -120,7 +120,12 @@ simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL
   sim_contours_list <- list()
   i <- 1
   for (b in 1 : sim_nr) {
-    cat("\r", "Calculate contours simulation:", b, "/", sim_nr)
+
+    # message switch
+    if (verbose == TRUE) {
+      message("\r", "Calculate contours simulation:", b, "/", sim_nr)
+    }
+
     sim_data_b <- sim_data[sim_data$simulation_nr == b, ]
     for (p in 1 : nrow(pairs_matrix)) {
       #use ks for density computation
@@ -134,7 +139,7 @@ simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL
     }
 
   }
-  cat("\n")
+  message("\n")
   sim_contours <- dplyr::bind_rows(sim_contours_list)
 
   return(sim_contours)
@@ -357,7 +362,7 @@ extract_geom_donutVPC <- function(sim_data,
   #calculate contours for every percentile and every variable pair combination
   i <- 1
   for (b in 1:B) {
-    cat("\r", "Calculate contours of simulation:", b, "/", B)
+    message("\r", "Calculate contours of simulation:", b, "/", B)
     sim_data_b <- sim_data[sim_data$simulation_nr == b,]
     for (p in 1:nrow(pairs_matrix)) {
       #use ks for density computation
@@ -371,7 +376,7 @@ extract_geom_donutVPC <- function(sim_data,
     }
 
   }
-  cat("\n")
+  message("\n")
   sim_contours <- dplyr::bind_rows(sim_contours_list)
 
 

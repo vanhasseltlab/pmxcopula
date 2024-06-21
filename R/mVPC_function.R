@@ -43,7 +43,9 @@ mVPC <- function(sim_data,
                  colors_bands = c("#99E0DC", "#E498B4"),
                  caption = NULL,
                  percentiles = c(10, 50, 90),
-                 conf_band = 95) {
+                 conf_band = 95,
+                 return_grob = FALSE,
+                 verbose = TRUE) {
 
   # determine the variables of interest ----
   if (is.null(var)) {
@@ -71,7 +73,8 @@ mVPC <- function(sim_data,
                             sim_nr = sim_nr,
                             pairs_matrix = pairs_matrix,
                             conf_band = conf_band,
-                            colors_bands = colors_bands)
+                            colors_bands = colors_bands,
+                            verbose = verbose)
 
   # arrange the subplots
   n = length(var)
@@ -81,7 +84,15 @@ mVPC <- function(sim_data,
   diag(layout_mat) <- nr_cross_plots + (1 : n)
   list_plots <- c(donutVPCs, qqplots)
 
-  gridExtra::grid.arrange(grobs = list_plots, layout_matrix = layout_mat, top = title, bottom = caption)
+
+  # determine the output
+  if (return_grob != FALSE) {
+    gridExtra::grid.arrange(grobs = list_plots, layout_matrix = layout_mat, top = title, bottom = caption)
+  } else {
+    mVPC_plot <- gridExtra::grid.arrange(grobs = list_plots, layout_matrix = layout_mat, top = title, bottom = caption)
+    return(mVPC_plot)
+  }
+
 }
 
 

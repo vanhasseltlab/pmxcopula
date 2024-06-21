@@ -25,7 +25,8 @@ get_donutVPC <- function(sim_data,
                          sim_nr,
                          pairs_matrix = NULL,
                          conf_band = 95,
-                         colors_bands = c("#99E0DC", "#E498B4")) {
+                         colors_bands = c("#99E0DC", "#E498B4"),
+                         verbose = TRUE) {
 
   # check if the pairs_matrix is valid
   if (is.null(pairs_matrix)) {
@@ -49,7 +50,8 @@ get_donutVPC <- function(sim_data,
   sim_contours <- simulate_contours(sim_data = sim_data,
                                     percentiles = percentiles,
                                     sim_nr = sim_nr,
-                                    pairs_matrix = pairs_matrix)
+                                    pairs_matrix = pairs_matrix,
+                                    verbose = verbose)
 
 
   sim_contours_gg <- create_geom_donutVPC(sim_contours = sim_contours,
@@ -117,7 +119,8 @@ donutVPC <- function(sim_data,
                        sim_nr,
                        pairs_matrix = NULL,
                        conf_band = 95,
-                       colors_bands = c("#99E0DC", "#E498B4")) {
+                       colors_bands = c("#99E0DC", "#E498B4"),
+                       verbose = TRUE) {
 
   if (is.null(pairs_matrix)) {
     pairs_matrix <- t(combinat::combn(colnames(obs_data), 2))
@@ -130,7 +133,8 @@ donutVPC <- function(sim_data,
                                 sim_nr = sim_nr,
                                 pairs_matrix = pairs_matrix,
                                 conf_band = conf_band,
-                                colors_bands = colors_bands)
+                                colors_bands = colors_bands,
+                                verbose = verbose)
 
   plot_donuts <- patchwork::wrap_plots(donutVPC_geom, nrow = floor(sqrt(nrow(pairs_matrix))))
 

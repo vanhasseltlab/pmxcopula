@@ -10,7 +10,8 @@ calc_overlap(
   pairs_matrix = NULL,
   percentile,
   sim_nr,
-  summarize = FALSE
+  summarize = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -26,7 +27,8 @@ pair is included.}
 percentile of the density contour for each pair combination of variables;
 e.g., 90 represents that the overlap percentage is calculated for 90th percentile contours.}
 
-\item{sim_nr}{An integer indicating the number of simulations. If not set to 1, sim_data
+\item{sim_nr}{An integer indicating the number of simulations. Each simulation
+generates the same number of individuals as the observation dataset. If not set to 1, sim_data
 is supposed to include a column named "simulation_nr" as an identifier of each simulation run.}
 
 \item{summarize}{A logical value to indicate whether to summarize the overlap

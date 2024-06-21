@@ -10,7 +10,8 @@ rcopula(copula = copula, sim_nr = NULL)
 \item{copula}{An object of class "vine_dist" or "vine", from rvinecopulib
 package.}
 
-\item{sim_nr}{An integer indicating the number of simulations.}
+\item{sim_nr}{An integer indicating the number of simulations. Each simulation
+generates the same number of individuals as the observation dataset.}
 }
 \value{
 A data.frame containing simulation dataset. Rows correspond

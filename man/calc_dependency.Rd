@@ -4,7 +4,14 @@
 \alias{calc_dependency}
 \title{Compare Dependency Metric Between Simulation Data And Observed Data}
 \usage{
-calc_dependency(sim_data, obs_data, pairs_matrix = NULL, percentile, sim_nr)
+calc_dependency(
+  sim_data,
+  obs_data,
+  pairs_matrix = NULL,
+  percentile,
+  sim_nr,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{sim_data}{A data.frame containing simulation dataset. Rows correspond
@@ -23,7 +30,8 @@ pair is included.}
 percentile of the density contour for each pair combination of variables;
 e.g., 90 represents that the overlap percentage is calculated for 90th percentile contours.}
 
-\item{sim_nr}{An integer indicating the number of simulations.}
+\item{sim_nr}{An integer indicating the number of simulations. Each simulation
+generates the same number of individuals as the observation dataset.}
 }
 \value{
 A data.frame containing the dependency metrics calculated for simulation data and observed data.

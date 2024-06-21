@@ -13,7 +13,9 @@ mVPC(
   colors_bands = c("#99E0DC", "#E498B4"),
   caption = NULL,
   percentiles = c(10, 50, 90),
-  conf_band = 95
+  conf_band = 95,
+  return_grob = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -27,9 +29,9 @@ to observations and columns correspond to variables.}
 
 \item{var}{A character vector containing multiple characters. The
 vector represents the variables of interest for generating qqplots. If
-set to NULL, every variable is included.}
-
-\item{sim_nr}{An integer indicating the number of simulations.}
+set to NULL, every variable is included.
+#' @param sim_nr An integer indicating the number of simulations. Each simulation
+generates the same number of individuals as the observation dataset.}
 
 \item{title}{Title of the figure.}
 

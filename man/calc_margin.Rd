@@ -21,7 +21,8 @@ of each simulation run.}
 \item{obs_data}{A data.frame containing observation dataset. Rows correspond
 to observations and columns correspond to variables.}
 
-\item{sim_nr}{An integer indicating the number of simulations.}
+\item{sim_nr}{An integer indicating the number of simulations. Each simulation
+generates the same number of individuals as the observation dataset.}
 
 \item{var}{A character vector containing the variables of interest for calculating
 marginal metrics. If set to NULL, every variable is included.}
