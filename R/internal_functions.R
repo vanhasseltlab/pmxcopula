@@ -22,7 +22,7 @@ calc_correlation <- function(data, pairs_matrix = NULL){
                        method = "pearson")
 
     cor[i,] <- c("correlation", pairs_matrix[i,1], pairs_matrix[i,2],
-                 paste(pairs_matrix[i,1], pairs_matrix[i,2], sep = "_"),
+                 paste0(pairs_matrix[i,1], pairs_matrix[i,2], sep = "-"),
                  cor_pearson)
   }
 

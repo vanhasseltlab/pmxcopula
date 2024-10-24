@@ -10,6 +10,8 @@ the virtual population with the real-world population. The package provides
 functionality for visualzing distribution plots, calculating the marginal and dependency metrics, 
 generating qqplots and donut visual predictive check plots (donutVPCs), and more.
 
+An overview of the evaluation tools are summarized in our recent [*poster*](www.page-meeting.org/?abstract=10989).
+
 
 ## Installation
 
