@@ -19,7 +19,9 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     combinat,
-    dplyr, 
+    dplyr,
+    furrr (>= 0.3.1),
+    future (>= 1.34.0),
     ggplot2 (>= 3.3.0),
     gridExtra,
     ks,
