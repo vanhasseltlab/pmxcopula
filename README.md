@@ -102,7 +102,7 @@ mtr_margin <- calc_margin(
 ### Calculate dependency metrics
 Pearson correlations and overlap metrics can be calculated with _calc_dependency()_ functions.
 Pearson correlation quantifies linear association. Overlap metrics are calculated based on specific density contours (e.g. 95th percentile density contours) of the real-world and virtual populations: for each pair combination of covariates, 95th percentile density contours were calculated for observed and simulated populations. The overlap metric was computed as the Jaccard index: the ratio between the intersection area and union area. Higher overlap indicated a better description of dependence relations.
-Since data sharing the same linear or non-linear correlation could exhibit different dependency structures, the overlap metric takes the shape or pattern of the dependency into account. Pearson correlation and overlap metric collectively depict the joint behavior at a pairwise level and address different perspectives.
+Since data sharing the same linear or non-linear correlation could exhibit different dependency structures, the overlap metric takes the shape or pattern of the dependency into account. Pearson correlation and overlap metric collectively depict the joint behavior at a pairwise level and address different perspectives. Multiple cores are recommended to accelerate the calculation.
 
 ``` r
 mtr_dependency <- calc_dependency(
@@ -110,7 +110,8 @@ mtr_dependency <- calc_dependency(
     obs_data = pediatric_3cov,
     pairs_matrix = NULL,
     percentile = 95,
-    sim_nr = 100
+    sim_nr = 100,
+    cores = 4
     )
 ```
 ### Generate qqplots
@@ -128,7 +129,7 @@ qqplot <- plot_qq(
 
 ### Generate donutVPCs
 Donut visual predictive check plot(donutVPC) can be generated with _donutVPC()_ function.
-DonutVPC can help visualize the 90% prediction interval of 5th, 50th and 95th percentile density contour.
+DonutVPC can help visualize the 90% prediction interval of 5th, 50th and 95th percentile density contour. Multiple cores are recommended to accelerate the calculation.
 ``` r
 donut <- donutVPC(
     sim_data = pediatric_sim,
@@ -136,7 +137,8 @@ donut <- donutVPC(
     percentiles = c(5, 50, 95),
     sim_nr = 100,
     conf_band = 99,
-    colors_bands = c("#99E0DC", "#E498B4")
+    colors_bands = c("#99E0DC", "#E498B4"),
+    cores = 4
     )
 ```
 
