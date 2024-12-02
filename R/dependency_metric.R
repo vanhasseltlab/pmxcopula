@@ -13,6 +13,7 @@
 #' is supposed to include a column named "simulation_nr" as an identifier of each simulation run.
 #' @param summarize A logical value to indicate whether to summarize the overlap
 #' percentage across different simulations using mean and standard deviation.
+#' @param cores An integer of cores to use; if more than 1, calculation of overlap metric is done in parallel.
 #'
 #' @return A data.frame containing the overlap percentage of variable pair(s).
 #'
@@ -25,9 +26,10 @@
 #'     pairs_matrix = matrix(c("AGE" ,"BW" ,"BW" ,"CREA" ), nrow = 2, ncol = 2),
 #'     percentile = 95,
 #'     sim_nr = 100,
-#'     summarize = FALSE)
+#'     summarize = FALSE,
+#'     cores = 1)
 #'
-calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, sim_nr, summarize = FALSE, verbose = TRUE) {
+calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, sim_nr, summarize = FALSE, cores = 1) {
 
   # V1 <- V2 <- No <- statistic <- var_pair <- ovlp <- Var1 <- Var2 <- Sim_N <- sd <- NULL
 
@@ -40,10 +42,8 @@ calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, si
     dplyr::mutate(No = c(1:nrow(pairs_matrix)), # No serves as the indicator of variable pair
                   var_pair = paste0(V1, "-", V2))
   ovlp_data <- pair_data |>
-    dplyr::slice(rep(dplyr::row_number(), sim_nr)) |>
-    dplyr::mutate(Sim_N = rep(1:sim_nr, each = nrow(pair_data)),
-                  ovlp = NA)
-
+    dplyr::slice(dplyr::row_number()) |>
+    dplyr::mutate(ovlp = NA)
 
   # calculate the contours of observation contours
   contour_obs_list <- list()
@@ -65,40 +65,72 @@ calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL, percentile, si
   # calculate the contours of simulation contours
   contour_sim_list <- list()
 
-  for (b in 1 : sim_nr){
+  future::plan(future::multisession, workers = cores)
 
-    # message switch
-    if (verbose == TRUE) {
-      message("\r", "Calculate overlap of simulation:", b, "/", sim_nr)
+  # Define the simulation function for each b
+  simulate_overlap <- function(b, sim_data, pair_data, contour_obs_list, ovlp_data, percentile) {
+
+    # message("Processing simulation: ", b)
+    # Initialize list to store results for each b
+    contour_sim_list_b <- list()
+
+    for (i in 1:nrow(pair_data)) {
+      # Subset data for current simulation and variable pair
+      sdata <- sim_data |>
+        dplyr::filter(simulation_nr == b) |>
+        dplyr::select(pair_data[i, 1], pair_data[i, 2]) |> na.omit()
+
+      # Kernel density estimation
+      kd_sim <- ks::kde(sdata, compute.cont = TRUE)
+      contour_sim <- with(kd_sim, grDevices::contourLines(
+        x = eval.points[[1]],
+        y = eval.points[[2]],
+        z = estimate,
+        levels = cont[paste0(100 - percentile, "%")]
+      ))
+
+      # Process contour lines into polygons
+      contour_sim <- lapply(contour_sim, function(c) {
+        c_df <- as.data.frame(c)
+        c_df[nrow(c_df) + 1, ] <- c(c_df[1, 1], c_df[1, 2], c_df[1, 3])  # Close the polygon
+        return(c_df)
+      })
+      contour_sim_long <- dplyr::bind_rows(contour_sim, .id = "circle")
+      contour_sim_list_b[[paste0(pair_data$var_pair[pair_data$No == i])]] <- create_polygon(contour_sim_long)
+
+
+      # Calculate union and intersection areas
+      union_area <- sf::st_union(contour_obs_list[[i]], contour_sim_list_b[[paste0(pair_data$var_pair[pair_data$No == i])]])
+      inter_area <- sf::st_intersection(contour_obs_list[[i]], contour_sim_list_b[[paste0(pair_data$var_pair[pair_data$No == i])]])
+
+      Areaunion <- sf::st_area(union_area)
+      AreaIntersec <- sf::st_area(inter_area)
+
+      ovlp_data$Sim_N = b
+      ovlp_data$ovlp[ovlp_data$No == i] <- 100 * AreaIntersec / Areaunion
     }
 
-    for (i in 1 : nrow(pair_data))
-      {
-      sdata <- sim_data[sim_data$simulation_nr == b,] |> dplyr::select(pair_data[i,1],pair_data[i,2]) |> na.omit()
-      kd_sim <- ks::kde(sdata, compute.cont=TRUE)
-      contour_sim <- with(kd_sim, grDevices::contourLines(x=eval.points[[1]], y=eval.points[[2]],
-                                               z=estimate, levels=cont[paste0(100-percentile,"%")]))
-
-      for(m in 1: length(contour_sim)){
-        contour_sim[[m]] <- as.data.frame(contour_sim[[m]])
-        contour_sim[[m]][nrow(contour_sim[[m]])+1,] <- c(contour_sim[[m]][1,1], contour_sim[[m]][1,2], contour_sim[[m]][1,3])
-      }
-      contour_sim_long <- dplyr::bind_rows(contour_sim,.id="circle")
-      contour_sim_list[[paste0("Sim",b)]][[paste0(pair_data$var_pair[pair_data$No == i])]] <- create_polygon(contour_sim_long)
-
-      union_area <- sf::st_union(contour_obs_list[[i]],contour_sim_list[[b]][[i]])
-      inter_area <- sf::st_intersection(contour_obs_list[[i]],contour_sim_list[[b]][[i]])
-
-      Areaunion = sf::st_area(union_area)
-      AreaIntersec = sf::st_area(inter_area)
-
-      ovlp_data$ovlp[ovlp_data$Sim_N == b & ovlp_data$No == i] <- 100 * AreaIntersec/Areaunion
-
-    }
-
+    # Return results for this simulation
+    return(list(contour_sim_list = contour_sim_list_b, ovlp_data = ovlp_data))
   }
 
-  overlap <- ovlp_data |>
+  results <- furrr::future_map(1:sim_nr, ~ simulate_overlap(
+    b = .x,
+    sim_data = sim_data,
+    pair_data = pair_data,
+    contour_obs_list = contour_obs_list,
+    ovlp_data = ovlp_data,
+    percentile = percentile
+  ),
+  .options = furrr::furrr_options(seed = TRUE),
+  .progress = TRUE)
+
+  # Extract combined results
+  contour_sim_list <- lapply(results, `[[`, "contour_sim_list")
+  ovlp_data_combined <- do.call(rbind, lapply(results, `[[`, "ovlp_data"))
+
+
+  overlap <- ovlp_data_combined |>
     dplyr::mutate(statistic = "overlap") |>
     dplyr::select(-No) |>
     dplyr::mutate(Var1 = as.character(V1), Var2 = as.character(V2)) |>

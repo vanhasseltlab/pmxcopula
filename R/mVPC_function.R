@@ -21,6 +21,7 @@
 #' e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.
 #' @param conf_band A numeric value indicating the empirical confidence level
 #' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
+#' @param cores An integer of cores to use; if more than 1, calculation of mVPC is done in parallel.
 #'
 #' @return Multivariate visual predictive check plot which contains qqplots and donutVPCs.
 #'
@@ -45,7 +46,7 @@ mVPC <- function(sim_data,
                  percentiles = c(10, 50, 90),
                  conf_band = 95,
                  return_grob = FALSE,
-                 verbose = TRUE) {
+                 cores = 1) {
 
   # determine the variables of interest ----
   if (is.null(var)) {
@@ -74,7 +75,7 @@ mVPC <- function(sim_data,
                             pairs_matrix = pairs_matrix,
                             conf_band = conf_band,
                             colors_bands = colors_bands,
-                            verbose = verbose)
+                            cores = cores)
 
   # arrange the subplots
   n = length(var)

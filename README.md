@@ -86,7 +86,7 @@ plot1d <- plot_1dist(
 ### Calculate marginal metrics
 Marginal metrics can be calculated with _calc_margin()_ functions.
 Compare the marginal metrics [M] between observed and simulated data in terms of relative error (RE):
-    RE=(M_sim-M_obs)/M_obs 
+RE=(M_sim-M_obs)/M_obs 
 M_sim and M_obs represent the metrics for simulated population and observed population, respectively.
 ``` r
 mtr_margin <- calc_margin(

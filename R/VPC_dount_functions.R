@@ -97,11 +97,12 @@ create_polygon <- function(ci_data) {
 #' @param pairs_matrix Matrix with 2 column and each row containing a pair of
 #' variable names from the copula. If set to NULL, every possible variable
 #' pair is included.
+#' @param cores An integer of cores to use; if more than 1, calculation of donutVPC is done in parallel.
 #'
 #' @return A data.frame containing contours over all percentiles from the
 #' different simulations .
 #' @noRd
-simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL, verbose = TRUE) {
+simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL, cores = 1) {
 
   # check if the variable names exist in sim_data
   if (is.null(pairs_matrix)) {
@@ -116,31 +117,64 @@ simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL
     stop("simulation_nr does not exist in sim_data")
   }
 
+  # # calculate contours for every percentile and every variable pair combination
+  # sim_contours_list <- list()
+  # i <- 1
+  # for (b in 1 : sim_nr) {
+  #
+  #   # message switch
+  #   if (verbose == TRUE) {
+  #     message("\r", "Calculate contours simulation:", b, "/", sim_nr)
+  #   }
+  #
+  #   sim_data_b <- sim_data[sim_data$simulation_nr == b, ]
+  #   for (p in 1 : nrow(pairs_matrix)) {
+  #     #use ks for density computation
+  #     kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]], compute.cont = TRUE, approx.cont = FALSE)
+  #     contour_sim <- with(kd_sim, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
+  #                                                         z = estimate, levels = cont[paste0(100-percentiles, "%")]))
+  #     #extract information
+  #     sim_contours_list[[i]] <- extract_contour_df(contour_sim, kd_sim$cont, b, pairs_matrix[p, ])
+  #     i <- i + 1
+  #
+  #   }
+  #
+  # }
+  # message("\n")
+  # sim_contours <- dplyr::bind_rows(sim_contours_list)
+  #
+  # return(sim_contours)
+
   # calculate contours for every percentile and every variable pair combination
-  sim_contours_list <- list()
-  i <- 1
-  for (b in 1 : sim_nr) {
-
-    # message switch
-    if (verbose == TRUE) {
-      message("\r", "Calculate contours simulation:", b, "/", sim_nr)
-    }
-
+  future::plan(future::multisession, workers = cores)
+  simulate_cont <- function(b, sim_data, pair_data, percentiles) {
     sim_data_b <- sim_data[sim_data$simulation_nr == b, ]
+
+    sim_contours_list <- list()
     for (p in 1 : nrow(pairs_matrix)) {
       #use ks for density computation
       kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]], compute.cont = TRUE, approx.cont = FALSE)
       contour_sim <- with(kd_sim, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
                                                           z = estimate, levels = cont[paste0(100-percentiles, "%")]))
       #extract information
-      sim_contours_list[[i]] <- extract_contour_df(contour_sim, kd_sim$cont, b, pairs_matrix[p, ])
-      i <- i + 1
+      sim_contours_list[[p]] <- extract_contour_df(contour_sim, kd_sim$cont, b, pairs_matrix[p, ])
+
 
     }
 
+    return(sim_contours_list)
   }
-  message("\n")
-  sim_contours <- dplyr::bind_rows(sim_contours_list)
+
+  results <- furrr::future_map(1:sim_nr, ~ simulate_cont(
+    b = .x,
+    sim_data = sim_data,
+    pair_data = pair_data,
+    percentiles = percentiles
+  ),
+  .options = furrr::furrr_options(seed = TRUE),
+  .progress = TRUE)
+
+  sim_contours <- dplyr::bind_rows(do.call(c, results))
 
   return(sim_contours)
 }

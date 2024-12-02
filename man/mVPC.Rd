@@ -15,7 +15,7 @@ mVPC(
   percentiles = c(10, 50, 90),
   conf_band = 95,
   return_grob = FALSE,
-  verbose = TRUE
+  cores = 1
 )
 }
 \arguments{
@@ -45,6 +45,8 @@ e.g., c(10, 50, 90) represents 10th, 50th and 90th percentiles.}
 
 \item{conf_band}{A numeric value indicating the empirical confidence level
 for the width of the bands; e.g., 95 indicates 95\% confidence interval.}
+
+\item{cores}{An integer of cores to use; if more than 1, calculation of mVPC is done in parallel.}
 }
 \value{
 Multivariate visual predictive check plot which contains qqplots and donutVPCs.

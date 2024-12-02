@@ -17,6 +17,7 @@
 #' @param conf_band A numeric value indicating the empirical confidence level
 #' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
+#' @param cores An integer of cores to use; if more than 1, calculation of donutVPC is done in parallel.
 #'
 #' @noRd
 get_donutVPC <- function(sim_data,
@@ -26,7 +27,7 @@ get_donutVPC <- function(sim_data,
                          pairs_matrix = NULL,
                          conf_band = 95,
                          colors_bands = c("#99E0DC", "#E498B4"),
-                         verbose = TRUE) {
+                         cores = 1) {
 
   # check if the pairs_matrix is valid
   if (is.null(pairs_matrix)) {
@@ -51,7 +52,7 @@ get_donutVPC <- function(sim_data,
                                     percentiles = percentiles,
                                     sim_nr = sim_nr,
                                     pairs_matrix = pairs_matrix,
-                                    verbose = verbose)
+                                    cores = cores)
 
 
   sim_contours_gg <- create_geom_donutVPC(sim_contours = sim_contours,
@@ -66,7 +67,7 @@ get_donutVPC <- function(sim_data,
       dplyr::mutate(key = paste(percentile, var1, var2, sim_nr, circle)) |>
       dplyr::filter(var1 == pairs_matrix[i, 1], var2 == pairs_matrix[i, 2]) |>
       ggplot2::ggplot() +
-      sim_contours_gg[[i]] +
+      sim_contours_gg[[i]] +donut
       ggplot2::geom_path(ggplot2::aes(x = x, y = y, color = percentile, group = key), color = "black") +
       ggplot2::labs(x = pairs_matrix[i, 1], y = pairs_matrix[i, 2]) +
       ggplot2::theme_bw() + ggplot2::theme(aspect.ratio = 1)
@@ -97,6 +98,7 @@ get_donutVPC <- function(sim_data,
 #' @param conf_band A numeric value indicating the empirical confidence level
 #' for the width of the bands; e.g., 95 indicates 95\% confidence interval.
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
+#' @param cores An integer of cores to use; if more than 1, calculation of donutVPC is done in parallel.
 #'
 #' @return A patchwork object of donutVPC for variable pairs.
 #' @export
@@ -111,7 +113,7 @@ get_donutVPC <- function(sim_data,
 #'     pairs_matrix = matrix(c("CREA","CREA", "AGE", "BW"),2,2),
 #'     conf_band = 95,
 #'     colors_bands = c("#99E0DC", "#E498B4")
-#'     )
+#'     cores = 2)
 #'
 donutVPC <- function(sim_data,
                        obs_data,
@@ -120,7 +122,7 @@ donutVPC <- function(sim_data,
                        pairs_matrix = NULL,
                        conf_band = 95,
                        colors_bands = c("#99E0DC", "#E498B4"),
-                       verbose = TRUE) {
+                       cores = 1) {
 
   if (is.null(pairs_matrix)) {
     pairs_matrix <- t(combinat::combn(colnames(obs_data), 2))
@@ -134,7 +136,7 @@ donutVPC <- function(sim_data,
                                 pairs_matrix = pairs_matrix,
                                 conf_band = conf_band,
                                 colors_bands = colors_bands,
-                                verbose = verbose)
+                                cores = cores)
 
   plot_donuts <- patchwork::wrap_plots(donutVPC_geom, nrow = floor(sqrt(nrow(pairs_matrix))))
 

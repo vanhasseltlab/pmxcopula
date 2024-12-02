@@ -12,7 +12,7 @@ donutVPC(
   pairs_matrix = NULL,
   conf_band = 95,
   colors_bands = c("#99E0DC", "#E498B4"),
-  verbose = TRUE
+  cores = 1
 )
 }
 \arguments{
@@ -39,6 +39,8 @@ pair is included.}
 for the width of the bands; e.g., 95 indicates 95\% confidence interval.}
 
 \item{colors_bands}{A vector with two strings specifying the colors of the confidence bands.}
+
+\item{cores}{An integer of cores to use; if more than 1, calculation of donutVPC is done in parallel.}
 }
 \value{
 A patchwork object of donutVPC for variable pairs.
@@ -56,6 +58,6 @@ plot <- donutVPC(
     pairs_matrix = matrix(c("CREA","CREA", "AGE", "BW"),2,2),
     conf_band = 95,
     colors_bands = c("#99E0DC", "#E498B4")
-    )
+    cores = 2)
 
 }

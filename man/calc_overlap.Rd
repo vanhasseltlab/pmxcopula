@@ -11,7 +11,7 @@ calc_overlap(
   percentile,
   sim_nr,
   summarize = FALSE,
-  verbose = TRUE
+  cores = 1
 )
 }
 \arguments{
@@ -33,6 +33,8 @@ is supposed to include a column named "simulation_nr" as an identifier of each s
 
 \item{summarize}{A logical value to indicate whether to summarize the overlap
 percentage across different simulations using mean and standard deviation.}
+
+\item{cores}{An integer of cores to use; if more than 1, calculation of overlap metric is done in parallel.}
 }
 \value{
 A data.frame containing the overlap percentage of variable pair(s).
@@ -47,6 +49,7 @@ overlap <- calc_overlap(
     pairs_matrix = matrix(c("AGE" ,"BW" ,"BW" ,"CREA" ), nrow = 2, ncol = 2),
     percentile = 95,
     sim_nr = 100,
-    summarize = FALSE)
+    summarize = FALSE,
+    cores = 1)
 
 }
