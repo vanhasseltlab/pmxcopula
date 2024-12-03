@@ -67,7 +67,7 @@ get_donutVPC <- function(sim_data,
       dplyr::mutate(key = paste(percentile, var1, var2, sim_nr, circle)) |>
       dplyr::filter(var1 == pairs_matrix[i, 1], var2 == pairs_matrix[i, 2]) |>
       ggplot2::ggplot() +
-      sim_contours_gg[[i]] +donut
+      sim_contours_gg[[i]] +
       ggplot2::geom_path(ggplot2::aes(x = x, y = y, color = percentile, group = key), color = "black") +
       ggplot2::labs(x = pairs_matrix[i, 1], y = pairs_matrix[i, 2]) +
       ggplot2::theme_bw() + ggplot2::theme(aspect.ratio = 1)
@@ -112,7 +112,7 @@ get_donutVPC <- function(sim_data,
 #'     sim_nr = 100,
 #'     pairs_matrix = matrix(c("CREA","CREA", "AGE", "BW"),2,2),
 #'     conf_band = 95,
-#'     colors_bands = c("#99E0DC", "#E498B4")
+#'     colors_bands = c("#99E0DC", "#E498B4"),
 #'     cores = 2)
 #'
 donutVPC <- function(sim_data,

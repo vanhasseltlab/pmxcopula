@@ -10,7 +10,7 @@ calc_dependency(
   pairs_matrix = NULL,
   percentile,
   sim_nr,
-  verbose = TRUE
+  cores = 1
 )
 }
 \arguments{
@@ -32,6 +32,8 @@ e.g., 90 represents that the overlap percentage is calculated for 90th percentil
 
 \item{sim_nr}{An integer indicating the number of simulations. Each simulation
 generates the same number of individuals as the observation dataset.}
+
+\item{cores}{An integer of cores to use; if more than 1, calculation of overlap metric is done in parallel.}
 }
 \value{
 A data.frame containing the dependency metrics calculated for simulation data and observed data.
@@ -45,7 +47,7 @@ mtr_dependency <- calc_dependency(
     obs_data = pediatric_3cov,
     pairs_matrix = NULL,
     percentile = 95,
-    sim_nr = 100
-    )
+    sim_nr = 100,
+    cores = 3)
 
 }

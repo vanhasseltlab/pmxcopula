@@ -57,7 +57,7 @@ plot <- donutVPC(
     sim_nr = 100,
     pairs_matrix = matrix(c("CREA","CREA", "AGE", "BW"),2,2),
     conf_band = 95,
-    colors_bands = c("#99E0DC", "#E498B4")
+    colors_bands = c("#99E0DC", "#E498B4"),
     cores = 2)
 
 }
