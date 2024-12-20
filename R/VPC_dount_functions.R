@@ -117,33 +117,6 @@ simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL
     stop("simulation_nr does not exist in sim_data")
   }
 
-  # # calculate contours for every percentile and every variable pair combination
-  # sim_contours_list <- list()
-  # i <- 1
-  # for (b in 1 : sim_nr) {
-  #
-  #   # message switch
-  #   if (verbose == TRUE) {
-  #     message("\r", "Calculate contours simulation:", b, "/", sim_nr)
-  #   }
-  #
-  #   sim_data_b <- sim_data[sim_data$simulation_nr == b, ]
-  #   for (p in 1 : nrow(pairs_matrix)) {
-  #     #use ks for density computation
-  #     kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]], compute.cont = TRUE, approx.cont = FALSE)
-  #     contour_sim <- with(kd_sim, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
-  #                                                         z = estimate, levels = cont[paste0(100-percentiles, "%")]))
-  #     #extract information
-  #     sim_contours_list[[i]] <- extract_contour_df(contour_sim, kd_sim$cont, b, pairs_matrix[p, ])
-  #     i <- i + 1
-  #
-  #   }
-  #
-  # }
-  # message("\n")
-  # sim_contours <- dplyr::bind_rows(sim_contours_list)
-  #
-  # return(sim_contours)
 
   # calculate contours for every percentile and every variable pair combination
   future::plan(future::multisession, workers = cores)
@@ -232,53 +205,6 @@ create_geom_donutVPC <- function(sim_contours, conf_band = 95, colors_bands = c(
     return(contour_geoms)
   }
 }
-
-# to include the predicted median line in the VPC prediction band, as an option
-# test version, we first test if it looks more complicated and then decide whether to keep it as an option
-# create_geom_donutVPC <- function(sim_contours, conf_band = 95, colors_bands = c("#99E0DC", "#E498B4"), return_polygons = FALSE, show_median = FALSE) {
-#
-#   # percentiles <- as.numeric(gsub("%", "", unique(sim_contours$percentile), fixed = T))
-#   percentiles <- as.numeric(gsub("%", "", sort(unique(sim_contours$percentile)), fixed = T))
-#   pairs_matrix <- unique(sim_contours[, c("var1", "var2")])
-#
-#   colors_bands <- colors_bands[((1:length(percentiles))/2 == round((1:length(percentiles))/2)) + 1] # colors were assigned to the bands depending on the odd or even order of percentiles
-#   names(colors_bands) <- percentiles
-#
-#   contour_geoms <- list()
-#   conf_geom_data <- list()
-#
-#   for (p in 1:nrow(pairs_matrix)) {
-#     var_pair <- paste0(pairs_matrix[p, 1], "-", pairs_matrix[p, 2])
-#
-#     contour_geoms[[var_pair]] <- list()
-#     for (pr in percentiles) {
-#       sim_full_df <- sim_contours |>
-#         dplyr::filter(var1 == pairs_matrix[p, 1], var2 == pairs_matrix[p, 2]) |>
-#         dplyr::filter(percentile == paste0(pr, "%"))
-#       kd_sim_full <- ks::kde(sim_full_df[, c("x", "y")], compute.cont = TRUE, approx.cont = FALSE)
-#       # new contour was calculated based the coordinates of the previously calculated contours
-#       # different countours at the same density level will be merged
-#       contour_sim_full <- with(kd_sim_full, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
-#                                                                     z = estimate, levels = cont[paste0(100-conf_band, "%")]))
-#       contour_data <- extract_contour_df(contour_sim_full, kd_sim_full$cont, pr, pairs_matrix[p, ])
-#
-#       conf_geom_data[[paste0(var_pair, ": ", pr, "%")]] <- contour_data |>
-#         create_polygon()
-#
-#       contour_geoms[[var_pair]][[paste0(pr, "%")]] <- ggplot2::geom_sf(data = conf_geom_data[[paste0(var_pair, ": ", pr, "%")]],
-#                                                                        color = colors_bands[as.character(pr)], fill = colors_bands[as.character(pr)])
-#     }
-#
-#   }
-#
-#   if (return_polygons) {
-#     return(conf_geom_data)
-#   } else {
-#     return(contour_geoms)
-#   }
-# }
-
-
 
 
 #' Create ggplot(s) with geom_vpc.

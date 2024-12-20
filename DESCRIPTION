@@ -1,7 +1,7 @@
 Package: pmxcopula
 Type: Package
 Title: Copula Evaluation in Pharmacometric Anaylsis
-Version: 0.1.0
+Version: 0.1.1
 Author: Laura B. Zwep, Yuchen Guo
 Maintainer: Yuchen Guo <iguoyuchen@outlook.com>
 Description: A comprehensive framework for copula model evaluation and virtual population simulation in pharmacometric analysis. 

@@ -1,6 +1,6 @@
 #' Pediatric population data
 #'
-#' A data.frame containing 3 covariates(age, body weight and serum creatinine) of pediatric population.
+#' A data.frame containing 3 covariates (age, body weight and serum creatinine) of pediatric population.
 #'
 #' @format A numeric data.frame with 1000 records and 3 variables.
 #' 'AGE', numeric, range: 0 - 720 (day)
