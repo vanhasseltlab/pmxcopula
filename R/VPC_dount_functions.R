@@ -126,7 +126,7 @@ simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL
     sim_contours_list <- list()
     for (p in 1 : nrow(pairs_matrix)) {
       #use ks for density computation
-      kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]], compute.cont = TRUE, approx.cont = FALSE)
+      kd_sim <- ks::kde(sim_data_b[, pairs_matrix[p, ]] |> na.omit(), compute.cont = TRUE, approx.cont = FALSE)
       contour_sim <- with(kd_sim, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
                                                           z = estimate, levels = cont[paste0(100-percentiles, "%")]))
       #extract information

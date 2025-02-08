@@ -19,6 +19,7 @@
 #' @param full_plot A logical value to indicate whether to plot multiple figures
 #' on one page.
 #' @param caption A logical value to indicate define the size of caption.
+#' @param bins An integer specifying the number of equally spaced contour levels to be generated.
 #'
 #' @return A graphical object.
 #'
@@ -38,6 +39,7 @@ plot_mvdist <- function(sim_data, obs_data, variables = NULL,
                         sim_nr = 1, title = NULL, plot_type = "points",
                         pick_color = c("#3ABAC1","#969696"), full_plot = TRUE,
                         caption = NULL,
+                        bins = 20,
                         return_grob = FALSE) {
 
   if ("simulation_nr" %in% colnames(sim_data)) {
@@ -82,8 +84,8 @@ plot_mvdist <- function(sim_data, obs_data, variables = NULL,
       data_o <- part_data[part_data$type == "observed", ]
 
       density_plots[[combination]] <- ggplot2::ggplot(mapping = ggplot2::aes(.data[[combination_variables[i, 1]]], .data[[combination_variables[i, 2]]])) +
-        ggplot2::geom_density2d(data = data_s, color = pick_color[1], bins = 20) +
-        ggplot2::geom_density2d(data = data_o,  alpha = 1, color = pick_color[2], linetype = 2, bins = 20) +
+        ggplot2::geom_density2d(data = data_s, color = pick_color[1], bins = bins) +
+        ggplot2::geom_density2d(data = data_o,  alpha = 1, color = pick_color[2], linetype = 2, bins = bins) +
         ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0))) +
         ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0))) +
         ggplot2::theme_bw() +

@@ -75,7 +75,7 @@ plot1d <- plot_1dist(
 Dependency structure can be visualized with _plot_mvdist()_ functions.
 
 ``` r
-plot1d <- plot_1dist(
+plotmvd <- plot_mvdist(
   sim_data = pediatric_sim,
   obs_data = pediatric_3cov,
   sim_nr = 100,

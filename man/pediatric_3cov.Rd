@@ -17,6 +17,6 @@ Virtual population generated from copula model \url{https://doi.org/10.1002/cpt.
 pediatric_3cov
 }
 \description{
-A data.frame containing 3 covariates(age, body weight and serum creatinine) of pediatric population.
+A data.frame containing 3 covariates (age, body weight and serum creatinine) of pediatric population.
 }
 \keyword{datasets}
