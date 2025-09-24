@@ -13,8 +13,10 @@ License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    R (>= 2.10)
+    R (>= 4.0.0)
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.5.0)
 Config/testthat/edition: 3
 Imports: 
@@ -33,3 +35,4 @@ Imports:
     tibble,
     tidyr
 RoxygenNote: 7.2.3
+VignetteBuilder: knitr
