@@ -22,7 +22,7 @@ As *pmxcopula* is still hosted on Github, we need to install it via
 the [`devtools`](https://devtools.r-lib.org/) official CRAN package.
 
 ```r
-devtools::install_github("vanhasseltlab/pmxcopula")
+devtools::install_github("vanhasseltlab/pmxcopula",build_vignettes = TRUE)
 ```
 After installing, we have to attach the package as usual:
 
