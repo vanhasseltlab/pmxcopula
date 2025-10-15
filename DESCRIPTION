@@ -26,6 +26,7 @@ Imports:
     future (>= 1.34.0),
     ggplot2 (>= 3.3.0),
     gridExtra,
+    kde1d (>= 1.1.1),
     ks,
     patchwork,
     reshape2,

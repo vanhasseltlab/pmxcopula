@@ -3,3 +3,5 @@
 ^LICENSE\.md$
 ^tester\.R$
 ^tests$
+^doc$
+^Meta$
