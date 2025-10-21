@@ -12,6 +12,7 @@ generating qqplots and donut visual predictive check plots (donutVPCs), and more
 
 An overview of the evaluation tools are summarized in our recent [*poster*](https://www.page-meeting.org/?abstract=10989).
 
+This README introduces the key functions of the package. For a step-by-step tutorial on using copulas for virtual population generation in quantitative pharmacology, check it out with `browseVignettes("pmxcopula")`.
 
 ## Installation
 
@@ -22,7 +23,7 @@ As *pmxcopula* is still hosted on Github, we need to install it via
 the [`devtools`](https://devtools.r-lib.org/) official CRAN package.
 
 ```r
-devtools::install_github("vanhasseltlab/pmxcopula",build_vignettes = TRUE, force = TRUE)
+devtools::install_github("vanhasseltlab/pmxcopula", build_vignettes = TRUE, force = TRUE)
 ```
 After installing, we have to attach the package as usual:
 
