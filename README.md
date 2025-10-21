@@ -12,7 +12,7 @@ generating qqplots and donut visual predictive check plots (donutVPCs), and more
 
 An overview of the evaluation tools are summarized in our recent [*poster*](https://www.page-meeting.org/?abstract=10989).
 
-This README introduces the key functions of the package. For a step-by-step tutorial on using copulas for virtual population generation in quantitative pharmacology, check it out with `browseVignettes("pmxcopula")`.
+This README introduces the key functions of the package. For a step-by-step tutorial on using copulas for virtual population generation in quantitative pharmacology, check out the HTML vignette with `browseVignettes("pmxcopula")` after installing the package.
 
 ## Installation
 
