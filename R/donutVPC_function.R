@@ -38,7 +38,9 @@ get_donutVPC <- function(sim_data,
     stop("variable names in pairs_matrix do not exist in obs_data.")
   }
 
-  # generate obs_contours
+  # Generate observed contours
+  # For each variable pair, estimate a 2D KDE on obs_data and extract
+  # contour lines at the target probability levels (e.g. 10th, 50th, 90th when percentiles = c(10, 50, 90))
   obs_contours <- NULL
   for (p in 1:nrow(pairs_matrix)) {
     kd_obs <- ks::kde(obs_data |> dplyr::select(pairs_matrix[p, ]) |> na.omit(), compute.cont = TRUE)
@@ -47,14 +49,19 @@ get_donutVPC <- function(sim_data,
     obs_contours <- rbind.data.frame(obs_contours, extract_contour_df(contour_obs, kd_obs$cont, 0, pairs_matrix[p, ]))
   }
 
-  # generate sim_contours
+  # Generate simulated contours
+  # For each simulation run (sim_nr) and each variable pair, estimate 2D KDEs
+  # and extract contour lines at the target probability levels
+  # (e.g. 10th, 50th, 90th when percentiles = c(10, 50, 90))
   sim_contours <- simulate_contours(sim_data = sim_data,
                                     percentiles = percentiles,
                                     sim_nr = sim_nr,
                                     pairs_matrix = pairs_matrix,
                                     cores = cores)
 
-
+  # Pool contour-defining points across simulations at the same percentile level
+  # Re-estimate the density and extract contour lines for the target confidence band
+  # (e.g. 2.5th and 97.5th when conf_band = 95), for each percentile-specific contour
   sim_contours_gg <- create_geom_donutVPC(sim_contours = sim_contours,
                                           conf_band = conf_band,
                                           colors_bands = colors_bands)
