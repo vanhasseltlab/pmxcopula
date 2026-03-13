@@ -20,9 +20,15 @@
 extract_contour_df <- function(contour_list, contour_levels, sim_nr = NULL, pair = NULL) {
   cont_df <- NULL
   for (i in 1:length(contour_list)) {
+
+    # number of contour-defining points
+    amount <- length(contour_list[[i]]$x)
+
     cont_df <- rbind.data.frame(cont_df,
                                 contour_list[[i]] |> as.data.frame() |>
-                                  dplyr::mutate(circle = i, percentile = names(contour_levels[contour_levels == level[1]])))
+                                  dplyr::mutate(circle = i,
+                                                percentile = names(contour_levels[contour_levels == level[1]]),
+                                                amount = amount))
   }
   if (!is.null(sim_nr)) {
     cont_df <- cont_df |> dplyr::mutate(sim_nr = sim_nr)
@@ -183,7 +189,20 @@ create_geom_donutVPC <- function(sim_contours, conf_band = 95, colors_bands = c(
       sim_full_df <- sim_contours |>
         dplyr::filter(var1 == pairs_matrix[p, 1], var2 == pairs_matrix[p, 2]) |>
         dplyr::filter(percentile == paste0(pr, "%"))
-      kd_sim_full <- ks::kde(sim_full_df[, c("x", "y")], compute.cont = TRUE, approx.cont = FALSE)
+
+      # use "weight" to correct
+      total <- nrow(sim_full_df)
+
+      # generate new weight
+      Weight <- (1/sim_full_df$amount) # *mean(sim_full_df$amount)
+      n_total <- length(Weight)
+      w_scaled <- n_total * Weight / sum(Weight)
+
+      kd_sim_full <- ks::kde(sim_full_df[, c("x", "y")],
+                             w = w_scaled,
+                             compute.cont = TRUE,
+                             approx.cont = FALSE)
+
       # new contour was calculated based the coordinates of the previously calculated contours
       # different countours at the same density level will be merged
       contour_sim_full <- with(kd_sim_full, grDevices::contourLines(x = eval.points[[1]], y = eval.points[[2]],
