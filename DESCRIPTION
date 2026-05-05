@@ -9,7 +9,7 @@ Description: A comprehensive framework for copula model evaluation and virtual p
     and dependency metrics (correlation and overlap percentage) of the observed and simulated populations, generating 
     visual predictive check plots (qqplots and donutVPCs) of the copula model, applying subset simulation for specific 
     group of individuals, and more.
-License: Apache License (>= 2)
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Depends: 
