@@ -10,6 +10,8 @@
 #'
 #' @return an object of class `repscore` including the MC sample and their
 #' corresponding densities
+#'
+#' @import rvinecopulib
 #' @export
 repscore_MC <- function(vine_obj, n, cores) {
   MC_sample <- rvinecopulib::rvine(n, vine_obj, cores = cores)

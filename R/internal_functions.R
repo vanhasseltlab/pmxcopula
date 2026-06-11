@@ -6,6 +6,8 @@
 #' pair is included.
 #'
 #' @return A data.frame containing the correlation calculated for the dataset.
+#'
+#' @importFrom combinat combn
 #' @noRd
 calc_correlation <- function(data, pairs_matrix = NULL){
 

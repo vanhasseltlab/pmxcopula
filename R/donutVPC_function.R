@@ -19,6 +19,11 @@
 #' @param colors_bands A vector with two strings specifying the colors of the confidence bands.
 #' @param cores An integer of cores to use; if more than 1, calculation of donutVPC is done in parallel.
 #'
+#' @importFrom combinat combn
+#' @importFrom ks kde
+#' @import dplyr
+#' @import ggplot2
+#'
 #' @noRd
 get_donutVPC <- function(sim_data,
                          obs_data,
@@ -108,6 +113,9 @@ get_donutVPC <- function(sim_data,
 #' @param cores An integer of cores to use; if more than 1, calculation of donutVPC is done in parallel.
 #'
 #' @return A patchwork object of donutVPC for variable pairs.
+#'
+#' @importFrom combinat combn
+#' @importFrom patchwork wrap_plots
 #' @export
 #'
 #' @examples

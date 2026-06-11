@@ -17,6 +17,11 @@
 #'
 #' @return A data.frame containing the overlap percentage of variable pair(s).
 #'
+#' @importFrom combinat combn
+#' @importFrom grDevices contourLines
+#' @importFrom ks kde
+#' @import dplyr
+#' @import sf
 #' @export
 #'
 #' @examples
@@ -176,6 +181,8 @@ calc_overlap <- function(sim_data, obs_data, pairs_matrix = NULL,
 #'
 #' @return A data.frame containing the dependency metrics calculated for simulation data and observed data.
 #'
+#' @importFrom combinat combn
+#' @import dplyr
 #' @export
 #'
 #' @examples

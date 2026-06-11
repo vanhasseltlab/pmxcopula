@@ -51,6 +51,8 @@ extract_contour_df <- function(contour_list, contour_levels, sim_nr = NULL, pair
 #' simulation identifiers.
 #'
 #' @return A sf polygon object with the polygon(s) of a contour.
+#'
+#'
 #' @noRd
 create_polygon <- function(ci_data) {
   polygon_list <- list()
@@ -107,6 +109,10 @@ create_polygon <- function(ci_data) {
 #'
 #' @return A data.frame containing contours over all percentiles from the
 #' different simulations .
+#'
+#' @importFrom furrr future_map
+#' @importFrom furrr furrr_options
+#'
 #' @noRd
 simulate_contours <- function(sim_data, percentiles, sim_nr, pairs_matrix = NULL, cores = 1) {
 

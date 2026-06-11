@@ -25,7 +25,7 @@
 #'
 #' @export
 #'
-#' @importFrom ggplot2 ggplot aes geom_point geom_density2d theme_bw theme geom_boxplot scale_y_continuous scale_x_continuous scale_fill_manual
+#' @import ggplot2
 #' @examples
 #' plot <- plot_mvdist(
 #'     sim_data = pediatric_sim,
